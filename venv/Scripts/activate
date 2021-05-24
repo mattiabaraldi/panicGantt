@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\mbaraldi\Documents\Code\panicGantt\venv"
+VIRTUAL_ENV="C:\Users\drbar\Documents\Code\panicGantt\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\mbaraldi\Documents\Code\panicGantt\venv
+set VIRTUAL_ENV=C:\Users\drbar\Documents\Code\panicGantt\venv
 
 if not defined PROMPT set PROMPT=$P$G
 
