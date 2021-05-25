@@ -1,4 +1,3 @@
-from numpy import character
 import pygame
 import random
 import string
@@ -24,6 +23,7 @@ class Projectile(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect()
         self.rect.move_ip(playerX - 16, playerY - 8)
 
+        # DA FIXARE, LA ROTAZIONE SVACCA RECT E PUNTO DI ANCHOR
         # def blitRotateCenter(surf, image, topleft, angle):
 
         #     rotated_image = pygame.transform.rotate(image, angle)

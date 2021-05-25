@@ -35,16 +35,16 @@ class Enemies(pygame.sprite.Sprite):
 
         self.updateGANTT(frame)
     
-    def spawnAll(self, bg, frame):
+    def spawnAll(self, bg):
 
-        self.spawnActivity(bg, bg.steps)
+        self.spawnActivity(bg)
 
-    def spawnActivity(self, bg, frame):
+    def spawnActivity(self, bg):
 
-        if not ((frame % 7 == 5) or (frame % 7 == 6)):
+        if not ((bg.steps % 7 == 5) or (bg.steps % 7 == 6)):
             
             for row in self.activitiesToAdd:
-                self.add('activity', bg, row, frame)
+                self.add('activity', bg, row, bg.steps)
 
             self.activitiesToAdd.clear()
 
@@ -53,10 +53,10 @@ class Enemies(pygame.sprite.Sprite):
                 if random.random() > self.activityRarity:
 
                     self.busyRow[row] = True
-                    if(frame % 7 == 5) or (frame % 7 == 6):
+                    if(bg.steps % 7 == 5) or (bg.steps % 7 == 6):
                         self.activitiesToAdd.append(row)
                     else:
-                        self.add('activity', bg, row, frame)
+                        self.add('activity', bg, row, bg.steps)
 
     
     def updateGANTT(self, frame):

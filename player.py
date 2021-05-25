@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
         # self.surf = pygame.Surface((16, 32))
         # self.surf.fill((255, 0, 0))
-        self.surf = pygame.image.load("player_sprite.png")
+        self.surf = pygame.image.load("sprites\\player_sprite.png")
         self.rect = self.surf.get_rect()
         self.rect.move_ip(g.SCREEN_WIDTH / 2, g.SCREEN_HEIGHT / 2)
         self.velXMax = 5
@@ -52,7 +52,21 @@ class Player(pygame.sprite.Sprite):
        
         self.projList.append(newProj)
 
+    def facingPos(self):
+
+        mousePos = pygame.mouse.get_pos()
+        if mousePos[0] > self.rect.centerx:
+            if self.flipped:
+                self.surf = pygame.transform.flip(self.surf, True, False)
+                self.flipped = False
+        else:
+            if not self.flipped:
+                self.surf = pygame.transform.flip(self.surf, True, False)
+                self.flipped = True
+
     def update(self, pressed_keys, tick, enemies):
+
+        self.facingPos()
 
         projToRemove = []
         for proj in self.projList:

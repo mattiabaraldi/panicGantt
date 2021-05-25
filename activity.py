@@ -1,8 +1,6 @@
 import pygame
 import pygame.freetype
-import globalvar as g
 import random
-from pygame.locals import K_SPACE
 
 class Activity(pygame.sprite.Sprite):
 
@@ -31,7 +29,7 @@ class Activity(pygame.sprite.Sprite):
         self.daysPassed = 0
         self.row = row
         self.name = f'{bg.steps}'
-        self.randomGen(bg, frame)
+        self.randomGen()
         self.getName()
         self.drawSurf()
 
@@ -43,6 +41,7 @@ class Activity(pygame.sprite.Sprite):
 
         self.surf = pygame.Surface((self.daysLeft * self.width, self.height))
         self.surf.fill(self.color)
+        pygame.draw.rect(self.surf, (0,0,0), self.surf.get_rect(), 1)
         self.rect = self.surf.get_rect()
         self.rect.move_ip(self.x, self.y)
         self.FONT.render_to(self.surf, (2, 3), self.name, (0, 0, 0))
@@ -50,13 +49,14 @@ class Activity(pygame.sprite.Sprite):
     def recolorSurf(self):
 
         self.surf.fill(self.color)
+        pygame.draw.rect(self.surf, (0,0,0), self.surf.get_rect(), 1)
         self.FONT.render_to(self.surf, (2, 3), self.name, (0, 0, 0))
 
     def getName(self):
 
         self.name = "20151 KLIMAOPREMA, PK-VS 0316-VIS 2"   
 
-    def randomGen(self, bg, frame):
+    def randomGen(self):
 
         self.daysLeft = random.randint(1, 14)
         for i in range(0, self.daysLeft):

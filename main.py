@@ -1,12 +1,10 @@
 # Import the pygame module
 import pygame
-import numpy
+import math
 import globalvar as g
 from player import Player
 from background import Background
-from activity import Activity
 from ui import UI
-import globalvar as g
 from enemies import Enemies
 
 from pygame.locals import (
@@ -44,6 +42,8 @@ while running:
     dt = clock.tick(g.FPS)
     if not stopTime:
         g.currentFrame = (g.currentFrame + 1) % (0.5 * g.FPS)
+        if math.floor(g.currentFrame) == 0:
+            g.currentFrame = 0
 
     screen.fill((0, 0, 0))
 
@@ -62,39 +62,24 @@ while running:
             running = False
 
         # elif event.type == pygame.MOUSEBUTTONDOWN:
-        #     if pygame.mouse.get_pressed()[0]:
-        #         projAim = pygame.mouse.get_pos()
-        #         player.shoot(projAim)
-        #     if pygame.mouse.get_pressed()[2]:
-        #         enemies.add('activity', bg)
+        #     ROBBA CON MOUSE PREMUTO
 
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys, dt, enemies)
     bg.update(g.currentFrame)
     ui.update(g.currentFrame)
     enemies.updateAll(g.currentFrame)
-    enemies.spawnAll(bg, g.currentFrame)
+    enemies.spawnAll(bg)
 
     if pygame.mouse.get_pressed()[0]:
         projAim = pygame.mouse.get_pos()
         player.shoot(projAim)
 
-    mousePos = pygame.mouse.get_pos()
-    if mousePos[0] > player.rect.centerx:
-        if player.flipped:
-            player.surf = pygame.transform.flip(player.surf, True, False)
-            player.flipped = False
-    else:
-        if not player.flipped:
-            player.surf = pygame.transform.flip(player.surf, True, False)
-            player.flipped = True
-    # if pygame.mouse.get_pressed()[2]:
-    #     enemies.add('activity', bg)
 
     # DRAW
 
     screen.blit(bg.surf, (bg.colOffset + bg.left, bg.top))
-    screen.blit(bg.surf, (bg.colOffset - bg.width + bg.top, bg.top))
+    screen.blit(bg.surf, (bg.colOffset - bg.width + bg.left, bg.top))
 
     for activity in enemies.GANTT:
         screen.blit(activity.surf, activity.rect)
