@@ -1,7 +1,7 @@
 # Define constants for the screen width and height
 
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 768
+SCREEN_WIDTH = 1680
+SCREEN_HEIGHT = 1024
 FPS = 60
 
 LEFT_UI_WIDTH, RIGHT_UI_WIDTH = 128, 32

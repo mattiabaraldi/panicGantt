@@ -7,8 +7,10 @@ class Projectile(pygame.sprite.Sprite):
     def __init__(self, playerX, playerY, bg):
 
         super(Projectile, self).__init__()
-        self.surf = pygame.Surface((16, 16))
-        self.surf.fill((0, 255, 0))
+        self.surf = pygame.Surface((32, 16), pygame.SRCALPHA, 32)
+        self.surf = self.surf.convert_alpha()
+        self.FONT = pygame.freetype.SysFont("Lucon.ttf", 10)
+        self.FONT.render_to(self.surf, (0, 0), "!%@?", (0, 0, 0))
         self.rect = self.surf.get_rect()
         self.rect.move_ip(playerX, playerY)
 
@@ -17,8 +19,7 @@ class Projectile(pygame.sprite.Sprite):
 
         self.type = 0
 
-        self.velX = 2
-        self.velY = 2
+        self.speed = 0.2
 
         # self.accX = 0
         # self.grav = 0.1

@@ -7,6 +7,7 @@ from background import Background
 from activity import Activity
 from ui import UI
 import globalvar as g
+from enemies import Enemies
 
 from pygame.locals import (
     K_ESCAPE,
@@ -26,6 +27,7 @@ bg = Background()
 player = Player(bg)
 ui = UI()
 clock = pygame.time.Clock()
+enemies = Enemies()
 
 # Variable to keep the main loop running
 running = True
@@ -59,15 +61,22 @@ while running:
                 projAim = pygame.mouse.get_pos()
                 player.shoot(projAim)
             if pygame.mouse.get_pressed()[2]:
-                GANTT.append(Activity(bg))
+                enemies.add('activity', bg)
 
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys, dt)
     bg.update(g.currentFrame)
+    enemies.updateAll(g.currentFrame)
+
+    if pygame.mouse.get_pressed()[2]:
+        enemies.add('activity', bg)
 
     # Draw the player on the screen
     screen.blit(bg.surf, (bg.colOffset + bg.left, bg.top))
     screen.blit(bg.surf, (bg.colOffset - bg.width + bg.top, bg.top))
+
+    for activity in enemies.GANTT:
+        screen.blit(activity.surf, activity.rect)
 
     screen.blit(ui.surfNames, (0, g.TOP_UI_HEIGHT))
     screen.blit(ui.surfMenus, (0, 0))
@@ -76,9 +85,6 @@ while running:
 
     for proj in player.projList:
         screen.blit(proj.surf, proj.rect)
-    
-    for activity in GANTT:
-        screen.blit(activity.surf, activity.rect)
 
     screen.blit(player.surf, player.rect)
 

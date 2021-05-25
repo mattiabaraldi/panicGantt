@@ -20,8 +20,8 @@ class Background(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect()
         self.colOffset = 0
 
-        self.rows = 22
-        self.cols = 28
+        self.rows = 36
+        self.cols = 32
         self.cellWidth = self.width / self.cols
         self.cellHeight = self.height/ self.rows
 
