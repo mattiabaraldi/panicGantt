@@ -16,39 +16,37 @@ class UI(pygame.sprite.Sprite):
         self.surfBottom = pygame.Surface((g.SCREEN_WIDTH - g.LEFT_UI_WIDTH, g.BOTTOM_UI_HEIGHT))
         self.surfRight = pygame.Surface((g.RIGHT_UI_WIDTH, g.SCREEN_HEIGHT - g.TOP_UI_HEIGHT))
 
-        self.FONT = pygame.freetype.SysFont("Lucon.ttf", 20)
+        self.FONT = pygame.freetype.SysFont("Lucon.ttf", 12)
 
-        stickerSurface = pygame.image.load("sprites\\UI_names.png")
-        stickerSurface = pygame.transform.scale(stickerSurface, (self.surfNames.get_rect().width, self.surfNames.get_rect().height))
-        self.surfNames.blit(stickerSurface, (0,0))
-        stickerSurface = pygame.image.load("sprites\\UI_top.png")
-        stickerSurface = pygame.transform.scale(stickerSurface, (self.surfMenus.get_rect().width, self.surfMenus.get_rect().height))
-        self.surfMenus.blit(stickerSurface, (0,0))
-        stickerSurface = pygame.image.load("sprites\\UI_bottom.png")
-        stickerSurface = pygame.transform.scale(stickerSurface, (self.surfBottom.get_rect().width, self.surfBottom.get_rect().height))
-        self.surfBottom.blit(stickerSurface, (0,0))
-        stickerSurface = pygame.image.load("sprites\\UI_right.png")
-        stickerSurface = pygame.transform.scale(stickerSurface, (self.surfRight.get_rect().width, self.surfRight.get_rect().height))
-        self.surfRight.blit(stickerSurface, (0,0))
+        self.trasferelloNames = pygame.image.load("sprites\\UI_names.png")
+        self.trasferelloNames = pygame.transform.scale(self.trasferelloNames, (self.surfNames.get_rect().width, self.surfNames.get_rect().height))
+
+        self.trasferelloMenus = pygame.image.load("sprites\\UI_top.png")
+        self.trasferelloMenus = pygame.transform.scale(self.trasferelloMenus, (self.surfMenus.get_rect().width, self.surfMenus.get_rect().height))
+
+        self.trasferelloBottom = pygame.image.load("sprites\\UI_bottom.png")
+        self.trasferelloBottom = pygame.transform.scale(self.trasferelloBottom, (self.surfBottom.get_rect().width, self.surfBottom.get_rect().height))
+
+        self.trasferelloRight = pygame.image.load("sprites\\UI_right.png")
+        self.trasferelloRight = pygame.transform.scale(self.trasferelloRight, (self.surfRight.get_rect().width, self.surfRight.get_rect().height))
+
+        self.surfNames.blit(self.trasferelloNames, (0,0))
+        self.surfMenus.blit(self.trasferelloMenus, (0,0))
+        self.surfBottom.blit(self.trasferelloBottom, (0,0))
+        self.surfRight.blit(self.trasferelloRight, (0,0))
 
         self.surf.blit(self.surfNames, (0, g.TOP_UI_HEIGHT))
         self.surf.blit(self.surfMenus, (0, 0))
         self.surf.blit(self.surfBottom, (g.LEFT_UI_WIDTH, g.SCREEN_HEIGHT - g.BOTTOM_UI_HEIGHT))
         self.surf.blit(self.surfRight, (g.SCREEN_WIDTH - g.RIGHT_UI_WIDTH, g.TOP_UI_HEIGHT))
 
-    def update(self, frame):
+    def update(self, player):
 
-        stickerSurface = pygame.image.load("sprites\\UI_names.png")
-        stickerSurface = pygame.transform.scale(stickerSurface, (self.surfNames.get_rect().width, self.surfNames.get_rect().height))
-        self.surfNames.blit(stickerSurface, (0,0))
-        stickerSurface = pygame.image.load("sprites\\UI_top.png")
-        stickerSurface = pygame.transform.scale(stickerSurface, (self.surfMenus.get_rect().width, self.surfMenus.get_rect().height))
-        self.surfMenus.blit(stickerSurface, (0,0))
-        stickerSurface = pygame.image.load("sprites\\UI_bottom.png")
-        stickerSurface = pygame.transform.scale(stickerSurface, (self.surfBottom.get_rect().width, self.surfBottom.get_rect().height))
-        self.surfBottom.blit(stickerSurface, (0,0))
-        stickerSurface = pygame.image.load("sprites\\UI_right.png")
-        stickerSurface = pygame.transform.scale(stickerSurface, (self.surfRight.get_rect().width, self.surfRight.get_rect().height))
-        self.surfRight.blit(stickerSurface, (0,0))
+        self.surfNames = self.cleanNames
+        self.surf.blit(self.surfNames, (0, g.TOP_UI_HEIGHT))
+        self.surf.blit(self.surfMenus, (0, 0))
+        self.surf.blit(self.surfBottom, (g.LEFT_UI_WIDTH, g.SCREEN_HEIGHT - g.BOTTOM_UI_HEIGHT))
+        self.surf.blit(self.surfRight, (g.SCREEN_WIDTH - g.RIGHT_UI_WIDTH, g.TOP_UI_HEIGHT))
 
-        # self.FONT.render_to(self.surf, (10, 10), f'{frame}', (0, 0, 0))
+        self.FONT.render_to(self.surfNames, (10, self.surfNames.get_rect().height / 2 + 100), f'Score: {player.score}', (0, 0, 0))
+        self.FONT.render_to(self.surfNames, (10, self.surfNames.get_rect().height / 2 + 120), f'Cazz: {player.cazziatoni}', (0, 0, 0))
