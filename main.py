@@ -79,6 +79,15 @@ while running:
         projAim = pygame.mouse.get_pos()
         player.shoot(projAim)
 
+    mousePos = pygame.mouse.get_pos()
+    if mousePos[0] > player.rect.centerx:
+        if player.flipped:
+            player.surf = pygame.transform.flip(player.surf, True, False)
+            player.flipped = False
+    else:
+        if not player.flipped:
+            player.surf = pygame.transform.flip(player.surf, True, False)
+            player.flipped = True
     # if pygame.mouse.get_pressed()[2]:
     #     enemies.add('activity', bg)
 

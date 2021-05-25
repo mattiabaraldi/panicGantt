@@ -9,8 +9,9 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, bg):
 
         super(Player, self).__init__()
-        self.surf = pygame.Surface((16, 32))
-        self.surf.fill((255, 0, 0))
+        # self.surf = pygame.Surface((16, 32))
+        # self.surf.fill((255, 0, 0))
+        self.surf = pygame.image.load("player_sprite.png")
         self.rect = self.surf.get_rect()
         self.rect.move_ip(g.SCREEN_WIDTH / 2, g.SCREEN_HEIGHT / 2)
         self.velXMax = 5
@@ -24,6 +25,8 @@ class Player(pygame.sprite.Sprite):
         self.accM = 0.1
         self.frictionX = 0.9
         self.frictionY = 0.95
+
+        self.flipped = False
 
         self.limitLeft = bg.left
         self.limitRight = bg.right
