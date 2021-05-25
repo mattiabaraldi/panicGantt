@@ -6,7 +6,7 @@ from pygame.locals import K_SPACE
 
 class Projectile(pygame.sprite.Sprite):
 
-    def __init__(self, playerX, playerY, angle, bg):
+    def __init__(self, playerX, playerY, playerW, playerH, angle, bg):
 
         super(Projectile, self).__init__()
 
@@ -21,18 +21,10 @@ class Projectile(pygame.sprite.Sprite):
         pork = random.choice(string.punctuation)
         self.FONT.render_to(self.surf, (0, 0), pork, (0, 0, 0))
         self.rect = self.surf.get_rect()
-        self.rect.move_ip(playerX - 16, playerY - 8)
-
-        # DA FIXARE, LA ROTAZIONE SVACCA RECT E PUNTO DI ANCHOR
-        # def blitRotateCenter(surf, image, topleft, angle):
-
-        #     rotated_image = pygame.transform.rotate(image, angle)
-        #     new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
-
-        #     surf.blit(rotated_image, new_rect)
+        self.rect.move_ip(playerX - playerW / 2, playerY - playerH / 2)
 
         self.surf = pygame.transform.rotate(self.surf, angle * 180 / 3.14 + 90)
-        # self.rect = self.surf.get_rect(center = self.rect.center)
+        self.rect = self.surf.get_rect(center = self.rect.center)
 
         self.type = 0
         self.speed = 0.5

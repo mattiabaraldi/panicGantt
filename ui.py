@@ -16,6 +16,10 @@ class UI(pygame.sprite.Sprite):
         self.surfBottom = pygame.Surface((g.SCREEN_WIDTH - g.LEFT_UI_WIDTH, g.BOTTOM_UI_HEIGHT))
         self.surfRight = pygame.Surface((g.RIGHT_UI_WIDTH, g.SCREEN_HEIGHT - g.TOP_UI_HEIGHT))
 
+        self.bluTurret = pygame.image.load("sprites\\blu_turret.png")
+        self.redTurret = pygame.image.load("sprites\\red_turret.png")
+        self.violetTurret = pygame.image.load("sprites\\violet_turret.png")
+
         self.FONT = pygame.freetype.SysFont("Lucon.ttf", 12)
 
         self.trasferelloNames = pygame.image.load("sprites\\UI_names.png")
@@ -40,13 +44,32 @@ class UI(pygame.sprite.Sprite):
         self.surf.blit(self.surfBottom, (g.LEFT_UI_WIDTH, g.SCREEN_HEIGHT - g.BOTTOM_UI_HEIGHT))
         self.surf.blit(self.surfRight, (g.SCREEN_WIDTH - g.RIGHT_UI_WIDTH, g.TOP_UI_HEIGHT))
 
-    def update(self, player):
+    def update(self, player, selectedTurret):
 
-        self.surfNames = self.cleanNames
+        self.surfNames.blit(self.trasferelloNames, (0,0))
+
+        self.FONT.render_to(self.surfNames, (10, self.surfNames.get_rect().height / 2 + 100), f'Punti: {player.score}', (0, 0, 0))
+        self.FONT.render_to(self.surfNames, (10, self.surfNames.get_rect().height / 2 + 120), f'Cazzi: {player.cazziatoni}', (0, 0, 0))
+
+        bluAlpha = 127
+        redAlpha = 127
+        violetAlpha = 127
+        if selectedTurret == 1:
+            bluAlpha = 255
+        elif selectedTurret == 2:
+            redAlpha = 255
+        elif selectedTurret == 3:
+            violetAlpha = 255
+
+        self.bluTurret.set_alpha(bluAlpha)
+        self.redTurret.set_alpha(redAlpha)
+        self.violetTurret.set_alpha(violetAlpha)
+
+        self.surfNames.blit(self.bluTurret, (10, self.surfNames.get_rect().height / 2 + 150))
+        self.surfNames.blit(self.redTurret, (30, self.surfNames.get_rect().height / 2 + 150))
+        self.surfNames.blit(self.violetTurret, (50, self.surfNames.get_rect().height / 2 + 150))
+
         self.surf.blit(self.surfNames, (0, g.TOP_UI_HEIGHT))
         self.surf.blit(self.surfMenus, (0, 0))
         self.surf.blit(self.surfBottom, (g.LEFT_UI_WIDTH, g.SCREEN_HEIGHT - g.BOTTOM_UI_HEIGHT))
         self.surf.blit(self.surfRight, (g.SCREEN_WIDTH - g.RIGHT_UI_WIDTH, g.TOP_UI_HEIGHT))
-
-        self.FONT.render_to(self.surfNames, (10, self.surfNames.get_rect().height / 2 + 100), f'Score: {player.score}', (0, 0, 0))
-        self.FONT.render_to(self.surfNames, (10, self.surfNames.get_rect().height / 2 + 120), f'Cazz: {player.cazziatoni}', (0, 0, 0))

@@ -3,16 +3,21 @@ import math
 import globalvar as g
 from pygame.locals import K_SPACE
 from projectile import Projectile
+from turret import Turret
 
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, bg):
 
         super(Player, self).__init__()
+
         # self.surf = pygame.Surface((16, 32))
         # self.surf.fill((255, 0, 0))
+
         self.surf = pygame.image.load("sprites\\player_sprite.png")
         self.rect = self.surf.get_rect()
+        self.width = self.rect.width
+        self.height = self.rect.height
         self.rect.move_ip(g.SCREEN_WIDTH / 2, g.SCREEN_HEIGHT / 2)
         self.velXMax = 5
         self.velYMax = 5
@@ -37,6 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.limitBottom = bg.bottom
 
         self.projList = []
+        self.turretList = []
 
         self.bg = bg
 
@@ -47,7 +53,7 @@ class Player(pygame.sprite.Sprite):
         if dY == 0:
             dY = 0.001
 
-        newProj = Projectile(self.rect.centerx, self.rect.centery, math.atan(dX / dY), self.bg)
+        newProj = Projectile(self.rect.centerx, self.rect.centery, self.width, self.height, math.atan(dX / dY), self.bg)
 
         ratio = math.sqrt(dX ** 2 + dY ** 2)
         newProj.velX = newProj.speed * dX / ratio
@@ -67,7 +73,18 @@ class Player(pygame.sprite.Sprite):
                 self.surf = pygame.transform.flip(self.surf, True, False)
                 self.flipped = True
 
+    def placeTurret(self, bg, x, y, selectedTurret):
+
+        newTurret = Turret(bg, x, y, selectedTurret)
+        self.turretList.append(newTurret)
+
+    def updateTurrets(self):
+
+        pass
+
     def update(self, pressed_keys, tick, enemies):
+
+        self.updateTurrets()
 
         self.facingPos()
 

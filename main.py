@@ -34,16 +34,27 @@ running = True
 newProj = False
 projAim = (0, 0)
 stopTime = False
+selectedTurret = 0
 GANTT = []
+
+alphaTurret = None
+bluTurret = pygame.image.load("sprites\\blu_turret.png").convert_alpha()
+redTurret = pygame.image.load("sprites\\red_turret.png").convert_alpha()
+violetTurret = pygame.image.load("sprites\\violet_turret.png").convert_alpha()
+
+turretW = bluTurret.get_rect().width
+turretH = bluTurret.get_rect().height
 
 # Main loop
 while running:
 
     dt = clock.tick(g.FPS)
     if not stopTime:
-        g.currentFrame = (g.currentFrame + 1) % (0.5 * g.FPS)
+        g.currentFrame = (g.currentFrame + 1) % (g.FPS)
         if math.floor(g.currentFrame) == 0:
             g.currentFrame = 0
+
+    mousePos = pygame.mouse.get_pos()
 
     screen.fill((0, 0, 0))
 
@@ -54,20 +65,39 @@ while running:
 
             if event.key == K_ESCAPE:
                 running = False
+
             elif event.key == K_RCTRL:
                 stopTime = not stopTime
+
+            elif event.key == ord('1'):
+                if selectedTurret == 1:
+                    selectedTurret = 0
+                else:
+                    selectedTurret = 1
+            elif event.key == ord('2'):
+                if selectedTurret == 2:
+                    selectedTurret = 0
+                else:
+                    selectedTurret = 2
+            elif event.key == ord('3'):
+                if selectedTurret == 3:
+                    selectedTurret = 0
+                else:
+                    selectedTurret = 3
 
         # Check for QUIT event. If QUIT, then set running to false.
         elif event.type == QUIT:
             running = False
 
-        # elif event.type == pygame.MOUSEBUTTONDOWN:
-        #     ROBBA CON MOUSE PREMUTO
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[2]:
+                if selectedTurret != 0:
+                    player.placeTurret(bg, mousePos[0], mousePos[1], selectedTurret)
 
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys, dt, enemies)
     bg.update(g.currentFrame)
-    ui.update(player)
+    ui.update(player, selectedTurret)
     enemies.updateAll(g.currentFrame, player)
     enemies.spawnAll(bg)
 
@@ -86,8 +116,25 @@ while running:
 
     screen.blit(ui.surf, (0,0))
 
+    for turret in player.turretList:
+        screen.blit(turret.surf, turret.rect)
+
     for proj in player.projList:
         screen.blit(proj.surf, proj.rect)
+
+    if selectedTurret != 0:
+
+        if selectedTurret == 1:
+            alphaTurret = bluTurret
+        elif selectedTurret == 2:
+            alphaTurret = redTurret
+        elif selectedTurret == 3:
+            alphaTurret = violetTurret
+
+        alphaTurret.set_alpha(96)
+
+        turretX = max(min(mousePos[0], bg.right), bg.left)
+        screen.blit(alphaTurret, (turretX - turretW / 2 , bg.bottom - turretH))
 
     screen.blit(player.surf, player.rect)
 

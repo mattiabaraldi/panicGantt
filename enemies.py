@@ -8,7 +8,7 @@ class Enemies(pygame.sprite.Sprite):
 
         super(Enemies, self).__init__()
 
-        self.activityRarity = 0.995
+        self.activityRarity = 0.998
         
         self.GANTT = []
         self.busyRow = []
