@@ -21,24 +21,38 @@ class Activity(pygame.sprite.Sprite):
         self.limitTop = bg.top
         self.limitBottom = bg.bottom
 
+        self.R, self.G, self.B = 200, 96, 0
+        self.color = (self.R, self.G, self.B)
+        self.completed = False
+
         self.FONT = pygame.freetype.SysFont("Lucon.ttf", 10)
 
         self.days = []
+        self.name = "20151 KLIMAOPREMA, PK-VS 0316-VIS 2"    
         self.randomGen()
         self.getName()
         self.drawSurf()
 
+        self.HPperDay = 10
+        self.maxHP = self.daysLeft * self.HPperDay
+        self.HP = self.maxHP
+
     def drawSurf(self):
 
         self.surf = pygame.Surface((self.daysLeft * self.width, self.height))
-        self.surf.fill((209, 96, 2))
+        self.surf.fill(self.color)
         self.rect = self.surf.get_rect()
         self.rect.move_ip(self.x, self.y)
-        self.FONT.render_to(self.surf, (2, 3), "20151 KLIMAOPREMA, PK-VS 0316-VIS 2", (0, 0, 0))
+        self.FONT.render_to(self.surf, (2, 3), self.name, (0, 0, 0))
+
+    def recolorSurf(self):
+
+        self.surf.fill(self.color)
+        self.FONT.render_to(self.surf, (2, 3), self.name, (0, 0, 0))
 
     def getName(self):
 
-        self.name = "ASPEN"
+        self.name = "20151 KLIMAOPREMA, PK-VS 0316-VIS 2"   
 
     def randomGen(self):
 
@@ -47,6 +61,26 @@ class Activity(pygame.sprite.Sprite):
             self.days.append(False)
         
         self.totWidth = self.daysLeft * self.width
+
+    def doActivity(self, damage):
+
+        if not self.completed:
+
+            self.HP -= damage
+            if self.HP <= 0:
+                self.completed = True
+
+            self.color = (  self.R * self.HP / self.maxHP,
+                            self.G * self.HP / self.maxHP + 255 * (1 - self.HP / self.maxHP),
+                            self.B * self.HP / self.maxHP   )
+
+            self.recolorSurf()
+
+            return True
+
+        else:
+
+            return False
 
     def update(self, frame):
 

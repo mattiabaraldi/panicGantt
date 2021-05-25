@@ -21,7 +21,7 @@ class Background(pygame.sprite.Sprite):
         self.colOffset = 0
 
         self.rows = 36
-        self.cols = 32
+        self.cols = 35
         self.cellWidth = self.width / self.cols
         self.cellHeight = self.height/ self.rows
 

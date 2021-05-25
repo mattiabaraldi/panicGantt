@@ -38,8 +38,10 @@ class Player(pygame.sprite.Sprite):
 
         dX = aim[0] - self.rect.centerx
         dY = aim[1] - self.rect.centery
+        if dY == 0:
+            dY = 0.001
 
-        newProj = Projectile(self.rect.centerx, self.rect.centery, self.bg)
+        newProj = Projectile(self.rect.centerx, self.rect.centery, math.atan(dX / dY), self.bg)
 
         ratio = math.sqrt(dX ** 2 + dY ** 2)
         newProj.velX = newProj.speed * dX / ratio
@@ -47,11 +49,11 @@ class Player(pygame.sprite.Sprite):
        
         self.projList.append(newProj)
 
-    def update(self, pressed_keys, tick):
+    def update(self, pressed_keys, tick, enemies):
 
         projToRemove = []
         for proj in self.projList:
-            if proj.update(tick):
+            if proj.update(tick, enemies):
                 projToRemove.append(proj)
 
         for proj in projToRemove:

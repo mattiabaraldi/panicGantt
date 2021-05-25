@@ -8,12 +8,15 @@ class Enemies(pygame.sprite.Sprite):
         super(Enemies, self).__init__()
         
         self.GANTT = []
+        self.groupGANTT = pygame.sprite.Group()
 
     def add(self, enemyType, bg):
 
         # DA OTTIMIZZARE
         if enemyType == 'activity':
-            self.GANTT.append(Activity(bg))
+            newActivity = Activity(bg)
+            self.GANTT.append(newActivity)
+            self.groupGANTT.add(newActivity)
 
     def remove(self, element):
 

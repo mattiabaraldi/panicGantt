@@ -46,42 +46,44 @@ while running:
 
     # for loop through the event queue
     for event in pygame.event.get():
-        # Check for KEYDOWN event
+
         if event.type == KEYDOWN:
-            # If the Esc key is pressed, then exit the main loop
+
             if event.key == K_ESCAPE:
                 running = False
 
-        # Check for QUIT event. If QUIT, then set running to false.
+        # Check for QUIT event. If QUIT, then set running to false.a
         elif event.type == QUIT:
             running = False
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.mouse.get_pressed()[0]:
-                projAim = pygame.mouse.get_pos()
-                player.shoot(projAim)
-            if pygame.mouse.get_pressed()[2]:
-                enemies.add('activity', bg)
+        # elif event.type == pygame.MOUSEBUTTONDOWN:
+        #     if pygame.mouse.get_pressed()[0]:
+        #         projAim = pygame.mouse.get_pos()
+        #         player.shoot(projAim)
+        #     if pygame.mouse.get_pressed()[2]:
+        #         enemies.add('activity', bg)
 
     pressed_keys = pygame.key.get_pressed()
-    player.update(pressed_keys, dt)
+    player.update(pressed_keys, dt, enemies)
     bg.update(g.currentFrame)
     enemies.updateAll(g.currentFrame)
+
+    if pygame.mouse.get_pressed()[0]:
+        projAim = pygame.mouse.get_pos()
+        player.shoot(projAim)
 
     if pygame.mouse.get_pressed()[2]:
         enemies.add('activity', bg)
 
-    # Draw the player on the screen
+    # DRAW
+
     screen.blit(bg.surf, (bg.colOffset + bg.left, bg.top))
     screen.blit(bg.surf, (bg.colOffset - bg.width + bg.top, bg.top))
 
     for activity in enemies.GANTT:
         screen.blit(activity.surf, activity.rect)
 
-    screen.blit(ui.surfNames, (0, g.TOP_UI_HEIGHT))
-    screen.blit(ui.surfMenus, (0, 0))
-    screen.blit(ui.surfBottom, (0, g.SCREEN_HEIGHT - g.BOTTOM_UI_HEIGHT))
-    screen.blit(ui.surfRight, (g.SCREEN_WIDTH - g.RIGHT_UI_WIDTH, g.TOP_UI_HEIGHT))
+    screen.blit(ui.surf, (0,0))
 
     for proj in player.projList:
         screen.blit(proj.surf, proj.rect)
