@@ -31,7 +31,8 @@ class Turret(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect()
         self.width = self.rect.width
         self.height = self.rect.height
-        self.rect.move_ip(x - self.width / 2, self.limitBottom - self.height)
+        turretX = max(min(x, self.limitRight - self.width / 2), self.limitLeft + self.width / 2)
+        self.rect.move_ip(turretX - self.width / 2, self.limitBottom - self.height)
 
         self.HPperDay = 10
         self.maxHP = 100

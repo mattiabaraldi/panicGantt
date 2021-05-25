@@ -133,7 +133,7 @@ while running:
 
         alphaTurret.set_alpha(96)
 
-        turretX = max(min(mousePos[0], bg.right), bg.left)
+        turretX = max(min(mousePos[0], bg.right - turretW / 2), bg.left + turretW / 2)
         screen.blit(alphaTurret, (turretX - turretW / 2 , bg.bottom - turretH))
 
     screen.blit(player.surf, player.rect)
