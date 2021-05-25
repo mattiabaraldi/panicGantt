@@ -6,15 +6,15 @@ from pygame.locals import K_SPACE
 
 class Activity(pygame.sprite.Sprite):
 
-    def __init__(self, bg):
+    def __init__(self, bg, row, frame):
 
         super(Activity, self).__init__()
 
         self.height = bg.cellHeight * 3 / 5
         self.width = bg.cellWidth
 
-        self.x = random.randint(0, bg.cols - 1) * bg.cellWidth + bg.left
-        self.y = random.randint(0, bg.rows - 1) * bg.cellHeight + bg.top + bg.cellHeight / 5
+        self.x = bg.right
+        self.y = row * bg.cellHeight + bg.top + bg.cellHeight / 5
 
         self.limitLeft = bg.left
         self.limitRight = bg.right
@@ -28,8 +28,10 @@ class Activity(pygame.sprite.Sprite):
         self.FONT = pygame.freetype.SysFont("Lucon.ttf", 10)
 
         self.days = []
-        self.name = "20151 KLIMAOPREMA, PK-VS 0316-VIS 2"    
-        self.randomGen()
+        self.daysPassed = 0
+        self.row = row
+        self.name = f'{bg.steps}'
+        self.randomGen(bg, frame)
         self.getName()
         self.drawSurf()
 
@@ -54,12 +56,15 @@ class Activity(pygame.sprite.Sprite):
 
         self.name = "20151 KLIMAOPREMA, PK-VS 0316-VIS 2"   
 
-    def randomGen(self):
+    def randomGen(self, bg, frame):
 
-        self.daysLeft = random.randint(1, 10)
+        self.daysLeft = random.randint(1, 14)
         for i in range(0, self.daysLeft):
             self.days.append(False)
-        
+
+        # self.x = random.randint(0, bg.cols - 1) * bg.cellWidth + bg.left
+        # self.y = random.randint(0, bg.rows - 1) * bg.cellHeight + bg.top + bg.cellHeight / 5
+
         self.totWidth = self.daysLeft * self.width
 
     def doActivity(self, damage):
@@ -84,11 +89,15 @@ class Activity(pygame.sprite.Sprite):
 
     def update(self, frame):
 
+        removeThis = 0 
+
         if frame == 0:
             self.rect.move_ip(-self.width, 0)
+            self.daysPassed += 1
+            if self.daysPassed == self.daysLeft:
+                removeThis = 1
 
-        removeThis = False
         if self.rect.left < self.limitLeft - self.totWidth:
-            removeThis = True
+            removeThis = 2
 
         return removeThis

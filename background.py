@@ -19,9 +19,11 @@ class Background(pygame.sprite.Sprite):
         self.surf.fill((0, 0, 0))
         self.rect = self.surf.get_rect()
         self.colOffset = 0
+        self.steps = 0
 
         self.rows = 36
         self.cols = 35
+        self.prog = 15
         self.cellWidth = self.width / self.cols
         self.cellHeight = self.height/ self.rows
 
@@ -32,10 +34,12 @@ class Background(pygame.sprite.Sprite):
         if frame == 0:
             self.colOffset -= self.cellWidth
             self.colOffset = self.colOffset % self.width
+            self.steps += 1
+            self.steps = self.steps % self.cols
 
         for i in range(0, self.rows):
             for j in range(0, self.cols):
                 color = (255, 255, 255)
-                if (j % 7 == 0) or (j % 7 == 1):
+                if (j % 7 == 5) or (j % 7 == 6):
                     color = (200, 200, 200)
                 pygame.draw.rect(self.surf, color, (j * self.cellWidth, i * self.cellHeight, self.cellWidth - 1, self.cellHeight - 1))

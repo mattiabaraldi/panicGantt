@@ -11,6 +11,7 @@ from enemies import Enemies
 
 from pygame.locals import (
     K_ESCAPE,
+    K_RCTRL,
     KEYDOWN,
     QUIT,
 )
@@ -27,20 +28,22 @@ bg = Background()
 player = Player(bg)
 ui = UI()
 clock = pygame.time.Clock()
-enemies = Enemies()
+enemies = Enemies(bg)
 
 # Variable to keep the main loop running
 running = True
 
 newProj = False
 projAim = (0, 0)
+stopTime = False
 GANTT = []
 
 # Main loop
 while running:
 
     dt = clock.tick(g.FPS)
-    g.currentFrame = (g.currentFrame + 1) % g.FPS
+    if not stopTime:
+        g.currentFrame = (g.currentFrame + 1) % (0.5 * g.FPS)
 
     screen.fill((0, 0, 0))
 
@@ -51,8 +54,10 @@ while running:
 
             if event.key == K_ESCAPE:
                 running = False
+            elif event.key == K_RCTRL:
+                stopTime = not stopTime
 
-        # Check for QUIT event. If QUIT, then set running to false.a
+        # Check for QUIT event. If QUIT, then set running to false.
         elif event.type == QUIT:
             running = False
 
@@ -66,14 +71,16 @@ while running:
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys, dt, enemies)
     bg.update(g.currentFrame)
+    ui.update(g.currentFrame)
     enemies.updateAll(g.currentFrame)
+    enemies.spawnAll(bg, g.currentFrame)
 
     if pygame.mouse.get_pressed()[0]:
         projAim = pygame.mouse.get_pos()
         player.shoot(projAim)
 
-    if pygame.mouse.get_pressed()[2]:
-        enemies.add('activity', bg)
+    # if pygame.mouse.get_pressed()[2]:
+    #     enemies.add('activity', bg)
 
     # DRAW
 
