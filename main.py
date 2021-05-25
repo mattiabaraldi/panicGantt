@@ -4,6 +4,7 @@ import numpy
 import globalvar as g
 from player import Player
 from background import Background
+from activity import Activity
 from ui import UI
 import globalvar as g
 
@@ -31,6 +32,7 @@ running = True
 
 newProj = False
 projAim = (0, 0)
+GANTT = []
 
 # Main loop
 while running:
@@ -56,6 +58,8 @@ while running:
             if pygame.mouse.get_pressed()[0]:
                 projAim = pygame.mouse.get_pos()
                 player.shoot(projAim)
+            if pygame.mouse.get_pressed()[2]:
+                GANTT.append(Activity(bg))
 
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys, dt)
@@ -71,7 +75,10 @@ while running:
     screen.blit(ui.surfRight, (g.SCREEN_WIDTH - g.RIGHT_UI_WIDTH, g.TOP_UI_HEIGHT))
 
     for proj in player.projList:
-       screen.blit(proj.surf, proj.rect)
+        screen.blit(proj.surf, proj.rect)
+    
+    for activity in GANTT:
+        screen.blit(activity.surf, activity.rect)
 
     screen.blit(player.surf, player.rect)
 
