@@ -31,9 +31,9 @@ class Enemies(pygame.sprite.Sprite):
         if enemyType == 'activity':
             self.GANTT.remove(element)
 
-    def updateAll(self, frame):
+    def updateAll(self, frame, player):
 
-        self.updateGANTT(frame)
+        self.updateGANTT(frame, player)
     
     def spawnAll(self, bg):
 
@@ -59,7 +59,7 @@ class Enemies(pygame.sprite.Sprite):
                         self.add('activity', bg, row, bg.steps)
 
     
-    def updateGANTT(self, frame):
+    def updateGANTT(self, frame, player):
 
         actToRemove = []
         for activity in self.GANTT:
@@ -67,6 +67,9 @@ class Enemies(pygame.sprite.Sprite):
             if whatToDo == 1:
                 self.busyRow[activity.row] = False
             elif whatToDo == 2:
+                neatScore = activity.maxHP - activity.HP
+                player.score += neatScore
+                player.cazziatoni += activity.maxHP - neatScore
                 actToRemove.append(activity)
 
         for activity in actToRemove:

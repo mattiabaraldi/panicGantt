@@ -26,6 +26,9 @@ class Player(pygame.sprite.Sprite):
         self.frictionX = 0.9
         self.frictionY = 0.95
 
+        self.score = 0
+        self.cazziatoni = 0
+
         self.flipped = False
 
         self.limitLeft = bg.left

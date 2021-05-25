@@ -67,8 +67,8 @@ while running:
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys, dt, enemies)
     bg.update(g.currentFrame)
-    ui.update(g.currentFrame)
-    enemies.updateAll(g.currentFrame)
+    ui.update(player)
+    enemies.updateAll(g.currentFrame, player)
     enemies.spawnAll(bg)
 
     if pygame.mouse.get_pressed()[0]:
