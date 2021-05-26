@@ -4,7 +4,7 @@ import pygame.freetype
 
 class UI(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, bg):
 
         super(UI, self).__init__()
 
@@ -34,10 +34,14 @@ class UI(pygame.sprite.Sprite):
         self.trasferelloRight = pygame.image.load("sprites\\UI_right.png")
         self.trasferelloRight = pygame.transform.scale(self.trasferelloRight, (self.surfRight.get_rect().width, self.surfRight.get_rect().height))
 
-        self.surfNames.blit(self.trasferelloNames, (0,0))
+        # self.surfNames.blit(self.trasferelloNames, (0,0))
         self.surfMenus.blit(self.trasferelloMenus, (0,0))
         self.surfBottom.blit(self.trasferelloBottom, (0,0))
         self.surfRight.blit(self.trasferelloRight, (0,0))
+
+        self.cellHeight = bg.cellHeight
+        self.rows = bg.rows
+        self.prog = bg.prog
 
         self.surf.blit(self.surfNames, (0, g.TOP_UI_HEIGHT))
         self.surf.blit(self.surfMenus, (0, 0))
@@ -46,10 +50,21 @@ class UI(pygame.sprite.Sprite):
 
     def update(self, player, selectedTurret):
 
-        self.surfNames.blit(self.trasferelloNames, (0,0))
+        # self.surfNames.blit(self.trasferelloNames, (0,0))
+        self.surfNames.fill((0,0,0))
 
-        self.FONT.render_to(self.surfNames, (10, self.surfNames.get_rect().height / 2 + 100), f'Punti: {player.score}', (0, 0, 0))
-        self.FONT.render_to(self.surfNames, (10, self.surfNames.get_rect().height / 2 + 120), f'Cazzi: {player.cazziatoni}', (0, 0, 0))
+        for i in range(0, self.prog):
+            color = (255, 255, 255)
+            pygame.draw.rect(self.surfNames, color, (0, i * self.cellHeight, g.LEFT_UI_WIDTH - 2, self.cellHeight - 2))
+        
+        pygame.draw.rect(self.surfNames, color, (0, self.prog * self.cellHeight, g.LEFT_UI_WIDTH - 1, g.SCREEN_HEIGHT - g.TOP_UI_HEIGHT - 1))
+
+        uiPos = (self.prog + 1) * self.cellHeight
+
+        uiPos += 20
+        self.FONT.render_to(self.surfNames, (10, uiPos), f'Punti: {player.score}', (0, 0, 0))
+        uiPos += 20
+        self.FONT.render_to(self.surfNames, (10, uiPos), f'Cazzi: {player.cazziatoni}', (0, 0, 0))
 
         bluAlpha = 127
         redAlpha = 127
@@ -65,9 +80,10 @@ class UI(pygame.sprite.Sprite):
         self.redTurret.set_alpha(redAlpha)
         self.violetTurret.set_alpha(violetAlpha)
 
-        self.surfNames.blit(self.bluTurret, (10, self.surfNames.get_rect().height / 2 + 150))
-        self.surfNames.blit(self.redTurret, (30, self.surfNames.get_rect().height / 2 + 150))
-        self.surfNames.blit(self.violetTurret, (50, self.surfNames.get_rect().height / 2 + 150))
+        uiPos += 40
+        self.surfNames.blit(self.bluTurret, (10, uiPos))
+        self.surfNames.blit(self.redTurret, (30, uiPos))
+        self.surfNames.blit(self.violetTurret, (50, uiPos))
 
         self.surf.blit(self.surfNames, (0, g.TOP_UI_HEIGHT))
         self.surf.blit(self.surfMenus, (0, 0))

@@ -1,5 +1,6 @@
 import globalvar as g
 import pygame
+import math
 import numpy
 
 class Background(pygame.sprite.Sprite):
@@ -8,8 +9,20 @@ class Background(pygame.sprite.Sprite):
 
         super(Background, self).__init__()
 
-        self.width = g.SCREEN_WIDTH - g.LEFT_UI_WIDTH - g. RIGHT_UI_WIDTH
+        self.width = g.SCREEN_WIDTH - g.LEFT_UI_WIDTH - g.RIGHT_UI_WIDTH
         self.height = g.SCREEN_HEIGHT - g.TOP_UI_HEIGHT - g.BOTTOM_UI_HEIGHT
+
+        self.rows = 36
+        self.cols = 35
+        self.prog = 15
+        self.cellWidth = math.floor(self.width / self.cols)
+        self.cellHeight = math.floor(self.height / self.rows)
+        self.width = self.cols * self.cellWidth
+        self.height = self.rows * self.cellHeight
+
+        g.RIGHT_UI_WIDTH = g.SCREEN_WIDTH - g.LEFT_UI_WIDTH - self.width
+        g.BOTTOM_UI_HEIGHT = g.SCREEN_HEIGHT - g.TOP_UI_HEIGHT - self.height
+
         self.left = g.LEFT_UI_WIDTH
         self.right = g.SCREEN_WIDTH - g.RIGHT_UI_WIDTH
         self.top = g.TOP_UI_HEIGHT
@@ -21,11 +34,6 @@ class Background(pygame.sprite.Sprite):
         self.colOffset = 0
         self.steps = 0
 
-        self.rows = 36
-        self.cols = 35
-        self.prog = 15
-        self.cellWidth = self.width / self.cols
-        self.cellHeight = self.height / self.rows
 
     def update(self, frame):
 

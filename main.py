@@ -24,7 +24,7 @@ screen = pygame.display.set_mode((g.SCREEN_WIDTH, g.SCREEN_HEIGHT))
 # Instantiate player. Right now, this is just a rectangle.
 bg = Background()
 player = Player(bg)
-ui = UI()
+ui = UI(bg)
 clock = pygame.time.Clock()
 enemies = Enemies(bg)
 
