@@ -44,7 +44,7 @@ class Activity(pygame.sprite.Sprite):
         self.color = (self.R, self.G, self.B)
         self.completed = False
 
-        self.FONT = pygame.freetype.SysFont("Lucon.ttf", 10)
+        self.FONT = pygame.freetype.SysFont("Lucon.ttf", 13)
 
         self.days = []
         self.daysPassed = 0

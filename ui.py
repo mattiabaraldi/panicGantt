@@ -21,6 +21,8 @@ class UI(pygame.sprite.Sprite):
         self.violetTurret = pygame.image.load("sprites\\violet_turret.png")
 
         self.FONT = pygame.freetype.SysFont("Lucon.ttf", 12)
+        self.progList = ["Ivan Battaglia", "Marco Ardizzoni", "Andrea Malaguti", "Fabio Manelli", "Nicola Negossi", "Mattia Baraldi", "Giulio Talassi", "Vincenzo Mauro"]
+        self.progDuty = [2, 2, 2, 1, 1, 1, 0, 0]
 
         self.trasferelloNames = pygame.image.load("sprites\\UI_names.png")
         self.trasferelloNames = pygame.transform.scale(self.trasferelloNames, (self.surfNames.get_rect().width, self.surfNames.get_rect().height))
@@ -56,8 +58,11 @@ class UI(pygame.sprite.Sprite):
         for i in range(0, self.prog):
             color = (255, 255, 255)
             pygame.draw.rect(self.surfNames, color, (0, i * self.cellHeight, g.LEFT_UI_WIDTH - 2, self.cellHeight - 2))
+            self.FONT.render_to(self.surfNames, (10, i * self.cellHeight + self.cellHeight  / 2), self.progList[i], (0, 0, 0))
         
         pygame.draw.rect(self.surfNames, color, (0, self.prog * self.cellHeight, g.LEFT_UI_WIDTH - 1, g.SCREEN_HEIGHT - g.TOP_UI_HEIGHT - 1))
+
+
 
         uiPos = (self.prog + 1) * self.cellHeight
 

@@ -26,7 +26,7 @@ bg = Background()
 player = Player(bg)
 ui = UI(bg)
 clock = pygame.time.Clock()
-enemies = Enemies(bg)
+enemies = Enemies(bg, ui)
 
 # Variable to keep the main loop running
 running = True
