@@ -47,6 +47,9 @@ class Player(pygame.sprite.Sprite):
         self.turretNumber = [0, 0, 0]
 
         self.bg = bg
+        self.justJumped = False
+        self.canDoubleJump = False
+        self.justDoubleJumped = False
 
     def shoot(self, aim):
 
@@ -102,17 +105,32 @@ class Player(pygame.sprite.Sprite):
         for proj in projToRemove:
             self.projList.remove(proj)
 
+
         # User inputs
-        if (pressed_keys[ord('w')] or pressed_keys[K_SPACE]) and not self.justJumped:
-            if self.rect.bottom == self.limitBottom:
-                self.velY -= self.jumpSpeed
-                self.justJumped = True
-                self.accY = self.grav / 3
-        elif not (pressed_keys[ord('w')] or pressed_keys[K_SPACE]):
-            self.justJumped = False
+        if (pressed_keys[ord('w')] or pressed_keys[K_SPACE]) and not self.justJumped and self.rect.bottom == self.limitBottom:
+
+            self.velY -= self.jumpSpeed
+            self.accY = self.grav / 5
+            self.justJumped = True
+
+        elif (pressed_keys[ord('w')] or pressed_keys[K_SPACE]) and not self.justDoubleJumped and self.canDoubleJump:
+
+            self.velY = -self.jumpSpeed
+            self.justDoubleJumped = True
+            self.accY = self.grav / 5
+
+        elif not (pressed_keys[ord('w')] or pressed_keys[K_SPACE]) and self.rect.bottom != self.limitBottom:
+            self.canDoubleJump = True
             self.accY = self.grav
+
         elif self.velY > 0:
             self.accY = self.grav
+
+        elif self.rect.bottom == self.limitBottom:
+            self.canDoubleJump = False
+            self.justDoubleJumped = False
+            self.justJumped = False
+            
             
         if pressed_keys[ord('s')]:
             self.velY += self.accM

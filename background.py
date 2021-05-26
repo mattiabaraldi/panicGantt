@@ -13,7 +13,7 @@ class Background(pygame.sprite.Sprite):
         self.height = g.SCREEN_HEIGHT - g.TOP_UI_HEIGHT - g.BOTTOM_UI_HEIGHT
 
         self.rows = 25
-        self.cols = 25
+        self.cols = 28
         self.prog = 8
         self.cellWidth = math.floor(self.width / self.cols)
         self.cellHeight = math.floor(self.height / self.rows)
