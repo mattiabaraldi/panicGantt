@@ -4,7 +4,7 @@ import random
 
 class Activity(pygame.sprite.Sprite):
 
-    def __init__(self, bg, row, type, name):
+    def __init__(self, bg, row, type, name, score):
 
         super(Activity, self).__init__()
 
@@ -22,18 +22,23 @@ class Activity(pygame.sprite.Sprite):
         self.limitBottom = bg.bottom
 
         self.type = type
-        if self.type == 0:
-            self.R = 80
-            self.G = 90
-            self.B = 224
-        elif self.type == 1:
-            self.R = 255
-            self.G = 50
-            self.B = 60
-        elif self.type == 2:
-            self.R = 200
-            self.G = 90
-            self.B = 200
+        if random.random() < score / 2000:
+            self.R = 206
+            self.G = 96
+            self.B = 2
+        else:
+            if self.type == 0:
+                self.R = 80
+                self.G = 90
+                self.B = 224
+            elif self.type == 1:
+                self.R = 255
+                self.G = 50
+                self.B = 60
+            elif self.type == 2:
+                self.R = 200
+                self.G = 90
+                self.B = 200
 
         # self.R, self.G, self.B = 206, 96, 2
         self.color = (self.R, self.G, self.B)

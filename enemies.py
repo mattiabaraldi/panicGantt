@@ -30,11 +30,11 @@ class Enemies(pygame.sprite.Sprite):
         self.maxActivities = 15
         self.maxRows = min(15, bg.prog)
 
-    def add(self, enemyType, bg, row, frame):
+    def add(self, enemyType, bg, row, frame, score):
 
         # DA OTTIMIZZARE
         if enemyType == 'activity':
-            newActivity = Activity(bg, row, frame, random.choice(self.comms))
+            newActivity = Activity(bg, row, frame, random.choice(self.comms), score)
             self.GANTT.append(newActivity)
             self.groupGANTT.add(newActivity)
 
@@ -48,18 +48,18 @@ class Enemies(pygame.sprite.Sprite):
 
         self.updateGANTT(frame, player)
     
-    def spawnAll(self, bg):
+    def spawnAll(self, bg, score):
 
-        self.spawnActivity(bg)
+        self.spawnActivity(bg, score)
 
-    def spawnActivity(self, bg):
+    def spawnActivity(self, bg, score):
 
         if not ((bg.steps % 7 == 5) or (bg.steps % 7 == 6)):
             
             for row in self.activitiesToAdd:
                 actPerType = self.maxRows / 3
                 activityType = math.floor(row / actPerType)
-                self.add('activity', bg, row, activityType)
+                self.add('activity', bg, row, activityType, score)
 
             self.activitiesToAdd.clear()
 
@@ -73,7 +73,7 @@ class Enemies(pygame.sprite.Sprite):
                     else:
                         actPerType = self.maxRows / 3
                         activityType = math.floor(row / actPerType)
-                        self.add('activity', bg, row, activityType)
+                        self.add('activity', bg, row, activityType, score)
 
     
     def updateGANTT(self, frame, player):

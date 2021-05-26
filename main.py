@@ -107,7 +107,7 @@ while running:
     bg.update(g.currentFrame)
     ui.update(player, selectedTurret)
     enemies.updateAll(g.currentFrame, player)
-    enemies.spawnAll(bg)
+    enemies.spawnAll(bg, player.score)
 
     if pygame.mouse.get_pressed()[0]:
         projAim = pygame.mouse.get_pos()
