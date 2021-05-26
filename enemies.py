@@ -9,6 +9,15 @@ class Enemies(pygame.sprite.Sprite):
 
         super(Enemies, self).__init__()
 
+        # load comm file
+        self.comms = ["20151 KLIMAOPREMA, PK-VS 0316-VIS 2"]
+        try:
+            with open("comm.txt", "r") as f:
+                for line in f.readlines():
+                    self.comms.append(line.removesuffix("\n"))
+        except:
+            pass
+
         self.activityRarity = 0.998
         
         self.GANTT = []
@@ -25,7 +34,7 @@ class Enemies(pygame.sprite.Sprite):
 
         # DA OTTIMIZZARE
         if enemyType == 'activity':
-            newActivity = Activity(bg, row, frame)
+            newActivity = Activity(bg, row, frame, random.choice(self.comms))
             self.GANTT.append(newActivity)
             self.groupGANTT.add(newActivity)
 

@@ -4,12 +4,14 @@ import random
 
 class Activity(pygame.sprite.Sprite):
 
-    def __init__(self, bg, row, type):
+    def __init__(self, bg, row, type, name):
 
         super(Activity, self).__init__()
 
         self.height = bg.cellHeight * 3 / 5
         self.width = bg.cellWidth
+
+        self.name = name
 
         self.x = bg.right
         self.y = row * bg.cellHeight + bg.top + bg.cellHeight / 5
@@ -42,9 +44,8 @@ class Activity(pygame.sprite.Sprite):
         self.days = []
         self.daysPassed = 0
         self.row = row
-        self.name = f'{bg.steps}'
         self.randomGen()
-        self.getName()
+        # self.getName()
         self.drawSurf()
 
         self.HPperDay = 10
