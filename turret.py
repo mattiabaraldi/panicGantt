@@ -22,11 +22,11 @@ class Turret(pygame.sprite.Sprite):
 
         self.surf = None
 
-        if self.type == 1:
+        if self.type == 0:
             self.surf = pygame.image.load("sprites\\blu_turret.png")
-        elif self.type == 2:
+        elif self.type == 1:
             self.surf = pygame.image.load("sprites\\red_turret.png")
-        elif self.type == 3:
+        elif self.type == 2:
             self.surf = pygame.image.load("sprites\\violet_turret.png")
 
         self.rect = self.surf.get_rect()
@@ -44,7 +44,7 @@ class Turret(pygame.sprite.Sprite):
         self.maxHP = 100
         self.HP = self.maxHP
 
-        self.pork = ["maremmaputtanaimpestata", "mannaggialclero", "tivengaunaccidente"][self.type - 1]
+        self.pork = ["maremmaputtanaimpestata", "mannaggialclero", "tivengaunaccidente"][self.type]
         self.cnt = 0
         self.index = len(self.pork) + 1
         self.rateOfFire = 3

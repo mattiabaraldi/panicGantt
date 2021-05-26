@@ -22,7 +22,7 @@ class UI(pygame.sprite.Sprite):
 
         self.FONT = pygame.freetype.SysFont("Lucon.ttf", 12)
         self.progList = ["Ivan Battaglia", "Marco Ardizzoni", "Andrea Malaguti", "Fabio Manelli", "Nicola Negossi", "Mattia Baraldi", "Giulio Talassi", "Vincenzo Mauro"]
-        self.progDuty = [2, 2, 2, 1, 1, 1, 0, 0]
+        self.progDuty = [2, 2, 2, 0, 0, 0, 1, 1]
 
         self.trasferelloNames = pygame.image.load("sprites\\UI_names.png")
         self.trasferelloNames = pygame.transform.scale(self.trasferelloNames, (self.surfNames.get_rect().width, self.surfNames.get_rect().height))
@@ -62,8 +62,6 @@ class UI(pygame.sprite.Sprite):
         
         pygame.draw.rect(self.surfNames, color, (0, self.prog * self.cellHeight, g.LEFT_UI_WIDTH - 1, g.SCREEN_HEIGHT - g.TOP_UI_HEIGHT - 1))
 
-
-
         uiPos = (self.prog + 1) * self.cellHeight
 
         uiPos += 20
@@ -85,10 +83,15 @@ class UI(pygame.sprite.Sprite):
         self.redTurret.set_alpha(redAlpha)
         self.violetTurret.set_alpha(violetAlpha)
 
+        uiPos += 30
+        self.surfNames.blit(self.bluTurret, (15, uiPos))
+        self.surfNames.blit(self.redTurret, (65, uiPos))
+        self.surfNames.blit(self.violetTurret, (115, uiPos))
+        
         uiPos += 40
-        self.surfNames.blit(self.bluTurret, (10, uiPos))
-        self.surfNames.blit(self.redTurret, (30, uiPos))
-        self.surfNames.blit(self.violetTurret, (50, uiPos))
+        self.FONT.render_to(self.surfNames, (10, uiPos), f'{player.turretPrice[0]}', (0, 0, 0))
+        self.FONT.render_to(self.surfNames, (60, uiPos), f'{player.turretPrice[1]}', (0, 0, 0))
+        self.FONT.render_to(self.surfNames, (110, uiPos), f'{player.turretPrice[2]}', (0, 0, 0))
 
         self.surf.blit(self.surfNames, (0, g.TOP_UI_HEIGHT))
         self.surf.blit(self.surfMenus, (0, 0))

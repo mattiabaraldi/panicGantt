@@ -92,13 +92,15 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[2]:
                 if selectedTurret != 0:
-                    player.placeTurret(bg, mousePos[0], mousePos[1], selectedTurret)
+                    player.placeTurret(bg, mousePos[0], mousePos[1], selectedTurret - 1)
                 else:
                     turretToRemove = []
                     for turret in player.turretList:
                         if turret.rect.collidepoint(mousePos[0], mousePos[1]):
                             turretToRemove.append(turret)
                     for turret in turretToRemove:
+                        player.turretNumber[turret.type] -= 1
+                        player.turretPrice[turret.type] = 4**(player.turretNumber[turret.type]) * 100
                         player.turretList.remove(turret)
 
 

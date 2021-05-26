@@ -31,7 +31,7 @@ class Player(pygame.sprite.Sprite):
         self.frictionX = 0.9
         self.frictionY = 0.95
 
-        self.score = 0
+        self.score = 100000
         self.cazziatoni = 0
 
         self.flipped = False
@@ -43,6 +43,8 @@ class Player(pygame.sprite.Sprite):
 
         self.projList = []
         self.turretList = []
+        self.turretPrice = [100, 100, 100]
+        self.turretNumber = [0, 0, 0]
 
         self.bg = bg
 
@@ -75,8 +77,12 @@ class Player(pygame.sprite.Sprite):
 
     def placeTurret(self, bg, x, y, selectedTurret):
 
-        newTurret = Turret(bg, x, y, selectedTurret)
-        self.turretList.append(newTurret)
+        if self.score > self.turretPrice[selectedTurret]:
+            self.score -= self.turretPrice[selectedTurret]
+            newTurret = Turret(bg, x, y, selectedTurret)
+            self.turretNumber[selectedTurret] += 1
+            self.turretPrice[selectedTurret] = 4**(self.turretNumber[selectedTurret]) * 100
+            self.turretList.append(newTurret)
 
     def updateTurrets(self, tick, bg, enemies):
 
