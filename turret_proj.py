@@ -17,8 +17,10 @@ class TurretProj(pygame.sprite.Sprite):
         self.surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA, 32)
         self.surf = self.surf.convert_alpha()
 
+        projAlpha = 96
+
         self.type = type
-        self.color = [(63, 72, 204), (227, 28, 36), (173, 63, 174)][self.type]
+        self.color = [(63, 72, 204, projAlpha), (227, 28, 36, projAlpha), (173, 63, 174, projAlpha)][self.type]
         
         self.FONT = pygame.freetype.SysFont("Lucon.ttf", 16)
         self.FONT.render_to(self.surf, (0, 0), pork, self.color)
