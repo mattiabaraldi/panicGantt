@@ -78,14 +78,14 @@ class Player(pygame.sprite.Sprite):
         newTurret = Turret(bg, x, y, selectedTurret)
         self.turretList.append(newTurret)
 
-    def updateTurrets(self):
+    def updateTurrets(self, tick, bg, enemies):
 
-        pass
+        for turret in self.turretList:
+            turret.update(tick, bg, enemies)
 
-    def update(self, pressed_keys, tick, enemies):
+    def update(self, pressed_keys, tick, enemies, bg):
 
-        self.updateTurrets()
-
+        self.updateTurrets(tick, bg, enemies)
         self.facingPos()
 
         projToRemove = []

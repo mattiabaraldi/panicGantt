@@ -93,9 +93,17 @@ while running:
             if pygame.mouse.get_pressed()[2]:
                 if selectedTurret != 0:
                     player.placeTurret(bg, mousePos[0], mousePos[1], selectedTurret)
+                else:
+                    turretToRemove = []
+                    for turret in player.turretList:
+                        if turret.rect.collidepoint(mousePos[0], mousePos[1]):
+                            turretToRemove.append(turret)
+                    for turret in turretToRemove:
+                        player.turretList.remove(turret)
+
 
     pressed_keys = pygame.key.get_pressed()
-    player.update(pressed_keys, dt, enemies)
+    player.update(pressed_keys, dt, enemies, bg)
     bg.update(g.currentFrame)
     ui.update(player, selectedTurret)
     enemies.updateAll(g.currentFrame, player)
@@ -121,6 +129,10 @@ while running:
 
     for proj in player.projList:
         screen.blit(proj.surf, proj.rect)
+
+    for turret in player.turretList:
+        for proj in turret.projList:
+            screen.blit(proj.surf, proj.rect)
 
     if selectedTurret != 0:
 

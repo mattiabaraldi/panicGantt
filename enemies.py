@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 from activity import Activity
 
 class Enemies(pygame.sprite.Sprite):
@@ -16,6 +17,9 @@ class Enemies(pygame.sprite.Sprite):
         for i in range(0, bg.prog):
             self.busyRow.append(False)
         self.groupGANTT = pygame.sprite.Group()
+
+        self.maxActivities = 15
+        self.maxRows = min(15, bg.prog)
 
     def add(self, enemyType, bg, row, frame):
 
@@ -44,11 +48,13 @@ class Enemies(pygame.sprite.Sprite):
         if not ((bg.steps % 7 == 5) or (bg.steps % 7 == 6)):
             
             for row in self.activitiesToAdd:
-                self.add('activity', bg, row, bg.steps)
+                actPerType = self.maxRows / 3
+                activityType = math.floor(row / actPerType)
+                self.add('activity', bg, row, activityType)
 
             self.activitiesToAdd.clear()
 
-        for row in range(0, bg.prog):
+        for row in range(0, self.maxRows):
             if not self.busyRow[row]:
                 if random.random() > self.activityRarity:
 
@@ -56,7 +62,9 @@ class Enemies(pygame.sprite.Sprite):
                     if(bg.steps % 7 == 5) or (bg.steps % 7 == 6):
                         self.activitiesToAdd.append(row)
                     else:
-                        self.add('activity', bg, row, bg.steps)
+                        actPerType = self.maxRows / 3
+                        activityType = math.floor(row / actPerType)
+                        self.add('activity', bg, row, activityType)
 
     
     def updateGANTT(self, frame, player):

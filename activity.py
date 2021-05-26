@@ -4,7 +4,7 @@ import random
 
 class Activity(pygame.sprite.Sprite):
 
-    def __init__(self, bg, row, frame):
+    def __init__(self, bg, row, type):
 
         super(Activity, self).__init__()
 
@@ -19,7 +19,21 @@ class Activity(pygame.sprite.Sprite):
         self.limitTop = bg.top
         self.limitBottom = bg.bottom
 
-        self.R, self.G, self.B = 200, 96, 0
+        self.type = type
+        if self.type == 0:
+            self.R = 80
+            self.G = 90
+            self.B = 224
+        elif self.type == 1:
+            self.R = 255
+            self.G = 50
+            self.B = 60
+        elif self.type == 2:
+            self.R = 200
+            self.G = 90
+            self.B = 200
+
+        # self.R, self.G, self.B = 206, 96, 2
         self.color = (self.R, self.G, self.B)
         self.completed = False
 
@@ -67,12 +81,18 @@ class Activity(pygame.sprite.Sprite):
 
         self.totWidth = self.daysLeft * self.width
 
-    def doActivity(self, damage):
+    def doActivity(self, damage, *args):
 
         if not self.completed:
 
+            if len(args) != 0:
+                if args[0] != self.type:
+                    damage = damage / 5
+                    # return 2            # destroy projectile
+
             self.HP -= damage
             if self.HP <= 0:
+                self.HP = 0
                 self.completed = True
 
             self.color = (  self.R * self.HP / self.maxHP,
@@ -81,11 +101,11 @@ class Activity(pygame.sprite.Sprite):
 
             self.recolorSurf()
 
-            return True
+            return 1                    # destroy projectile after damage
 
         else:
 
-            return False
+            return 0                    # pass through
 
     def update(self, frame):
 
