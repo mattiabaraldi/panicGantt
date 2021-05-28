@@ -2,6 +2,7 @@ import pygame
 import pygame.freetype
 import random
 import math
+from perlin_noise import PerlinNoise
 
 class Accollo(pygame.sprite.Sprite):
 
@@ -26,6 +27,9 @@ class Accollo(pygame.sprite.Sprite):
 
         self.imgAngle = 0
 
+        self.wobble = 0.005
+        self.noise = PerlinNoise(octaves=10, seed=1)
+
         self.maxHP = 100
         textSize = 100 / 6
         self.FONT = pygame.freetype.SysFont("Lucon.ttf", textSize)
@@ -33,16 +37,16 @@ class Accollo(pygame.sprite.Sprite):
 
         self.dist = 0
 
-        self.maxAcc = 0.1
         self.aimAngle = 0
         self.acc = 0
-        self.absAcc = 0.2
+        self.absAcc = 0.005
         self.vel = 0
         self.velX = 0
         self.velY = 0
-        self.maxVel = 0.2
+        self.maxVel = 1
+        self.minVel = 0.1
         self.angleAcc = 0
-        self.angleVel = 0.01
+        self.angleVel = 0.05
         self.angle = 0
         self.x = random.randint(self.limitLeft, self.limitRight)
         self.y = random.randint(self.limitTop, self.limitBottom)
@@ -68,8 +72,8 @@ class Accollo(pygame.sprite.Sprite):
         textRect = textSurf.get_rect()
 
         self.surf.blit(textSurf, (self.radius - textRect.w / 2, self.radius - textRect.h / 2))
-        posi = (self.rect.centerx + 1000 * self.velX, self.rect.centery + 1000 * self.velY)
-        pygame.draw.line(self.surf, (0, 0, 255), (self.rect.centerx, self.rect.centery), posi, 3)
+        posi = (self.rect.w / 2 + self.radius * self.velX, self.rect.h / 2 + self.radius * self.velY)
+        pygame.draw.line(self.surf, (0, 0, 255), (self.rect.w / 2, self.rect.h / 2), posi, 6)
         # pygame.draw.rect(self.surf, (255, 255, 255), ((self.radius - textRect.w / 2, self.radius - textRect.h / 2), textSurf.get_size()),2)
 
 
@@ -106,25 +110,26 @@ class Accollo(pygame.sprite.Sprite):
         else:
             self.acc = -self.absAcc
 
-        self.vel = max(min(self.vel + self.acc, self.maxVel), 0)
-        self.angle = (self.angle + self.angleVel) % (2 * math.pi)
+        self.vel = max(min(self.vel + self.acc, self.maxVel), self.minVel)
+        wobbleFactor = self.noise([self.wobble * self.velX / self.maxVel, self.wobble * self.velY / self.maxVel]) * self.angleVel * 10
+        self.angle = (self.angle + self.angleVel + wobbleFactor) % (2 * math.pi)
 
-        self.velX = self.vel * math.sin(self.angle)
-        self.velY = self.vel * math.cos(self.angle)
+        self.velX = self.vel * math.sin(self.angle + wobbleFactor)
+        self.velY = self.vel * math.cos(self.angle + wobbleFactor)
 
         self.rect.move_ip(self.velX * tick, self.velY * tick)
 
-        if self.rect.left < self.limitLeft:
-            self.rect.left = self.limitLeft
-            self.velX = 0
-        if self.rect.right > self.limitRight:
-            self.rect.right = self.limitRight 
-            self.velX = 0
-        if self.rect.top < self.limitTop:
-            self.rect.top = self.limitTop
-            self.velY = 0
-        if self.rect.bottom > self.limitBottom:
-            self.rect.bottom = self.limitBottom
-            self.velY = 0
+        # if self.rect.left < self.limitLeft:
+        #     self.rect.left = self.limitLeft
+        #     self.velX = 0
+        # if self.rect.right > self.limitRight:
+        #     self.rect.right = self.limitRight 
+        #     self.velX = 0
+        # if self.rect.top < self.limitTop:
+        #     self.rect.top = self.limitTop
+        #     self.velY = 0
+        # if self.rect.bottom > self.limitBottom:
+        #     self.rect.bottom = self.limitBottom
+        #     self.velY = 0
 
 

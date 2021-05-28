@@ -118,7 +118,8 @@ while running:
     if pygame.mouse.get_pressed()[0]:
         projAim = pygame.mouse.get_pos()
         player.shoot(projAim)
-        pos = pygame.mouse.get_pos()
+    
+    pos = pygame.mouse.get_pos()
 
 
     # DRAW
