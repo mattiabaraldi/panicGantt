@@ -2,6 +2,7 @@ import pygame
 import random
 import math
 from activity import Activity
+from accollo import Accollo
 
 class Enemies(pygame.sprite.Sprite):
 
@@ -20,6 +21,7 @@ class Enemies(pygame.sprite.Sprite):
 
         self.activityRarity = 0.998
         
+        self.accolloList = []
         self.GANTT = []
         self.busyRow = []
         self.activitiesToAdd = []
@@ -32,27 +34,34 @@ class Enemies(pygame.sprite.Sprite):
         self.maxActivities = 15
         self.prog = bg.prog
 
+
     def add(self, enemyType, bg, row, activityType, score):
 
-        # DA OTTIMIZZARE
         if enemyType == 'activity':
             newActivity = Activity(bg, row, activityType, random.choice(self.comms), score)
             self.GANTT.append(newActivity)
             self.groupGANTT.add(newActivity)
 
+        if enemyType == 'accollo':
+            newAccollo = Accollo(bg)
+            self.accolloList.append(newAccollo)
+
+
     def remove(self, enemyType, element):
 
-        # DA OTTIMIZZARE
         if enemyType == 'activity':
             self.GANTT.remove(element)
-
-    def updateAll(self, frame, player):
-
-        self.updateGANTT(frame, player)
     
+
     def spawnAll(self, bg, score):
 
         self.spawnActivity(bg, score)
+        self.spawnAccollo(bg)
+
+    def spawnAccollo(self, bg):
+
+        if len(self.accolloList) == 0:
+            self.add('accollo', bg, 0, 0, 0)
 
     def spawnActivity(self, bg, score):
 
@@ -77,7 +86,17 @@ class Enemies(pygame.sprite.Sprite):
                         activityType = self.progDuty[row]
                         self.add('activity', bg, row, activityType, score)
 
-    
+
+    def updateAll(self, frame, player, aim, tick):
+
+        self.updateGANTT(frame, player)
+        self.updateAccolli(aim, tick)
+
+    def updateAccolli(self, aim, tick):
+
+        for accollo in self.accolloList:
+            accollo.update(aim, tick)
+
     def updateGANTT(self, frame, player):
 
         actToRemove = []

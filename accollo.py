@@ -1,93 +1,130 @@
 import pygame
 import pygame.freetype
 import random
+import math
 
 class Accollo(pygame.sprite.Sprite):
 
-    def __init__(self, bg, row, frame):
+    def __init__(self, bg):
 
         super(Accollo, self).__init__()
 
+        self.radius = 40
+
         self.limitLeft = bg.left
-        self.limitRight = bg.right
-        self.limitTop = bg.top
-        self.limitBottom = bg.bottom
+        self.limitRight = bg.right - 2 * self.radius
+        self.limitTop = bg.top + bg.prog * bg.cellHeight
+        self.limitBottom = bg.bottom + 2 * self.radius
 
-        self.FONT = pygame.freetype.SysFont("Lucon.ttf", 10)
+        self.type = random.choice([0, 1, 2])
+        if self.type == 0:
+            self.text = "ATP"
+        elif self.type == 1:
+            self.text = "ATVI"
+        elif self.type == 2:
+            self.text = "ATColl"
 
-        self.days = []
-        self.daysPassed = 0
-        self.row = row
-        self.name = f'{bg.steps}'
-        self.randomGen()
-        self.getName()
-        self.drawSurf()
+        self.imgAngle = 0
 
-        self.HPperDay = 10
-        self.maxHP = self.daysLeft * self.HPperDay
+        self.maxHP = 100
+        textSize = 100 / 6
+        self.FONT = pygame.freetype.SysFont("Lucon.ttf", textSize)
         self.HP = self.maxHP
+
+        self.dist = 0
+
+        self.maxAcc = 0.1
+        self.aimAngle = 0
+        self.acc = 0
+        self.absAcc = 0.2
+        self.vel = 0
+        self.velX = 0
+        self.velY = 0
+        self.maxVel = 0.2
+        self.angleAcc = 0
+        self.angleVel = 0.01
+        self.angle = 0
+        self.x = random.randint(self.limitLeft, self.limitRight)
+        self.y = random.randint(self.limitTop, self.limitBottom)
+
+        self.surf = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32).convert_alpha()
+        self.basicSurf = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32).convert_alpha()
+        pygame.draw.circle(self.basicSurf, (255, 0, 0), (self.radius, self.radius), self.radius)
+        pygame.draw.circle(self.basicSurf, (0, 0, 0), (self.radius, self.radius), self.radius, 2)
+        self.rect = self.surf.get_rect()
+
+        self.drawSurf()
+        self.rect.move_ip(self.x, self.y)
+
 
     def drawSurf(self):
 
-        self.surf = pygame.Surface((self.daysLeft * self.width, self.height))
-        self.surf.fill(self.color)
-        pygame.draw.rect(self.surf, (0,0,0), self.surf.get_rect(), 1)
-        self.rect = self.surf.get_rect()
-        self.rect.move_ip(self.x, self.y)
-        self.FONT.render_to(self.surf, (2, 3), self.name, (0, 0, 0))
+        self.surf.blit(self.basicSurf, (0,0))
 
-    def recolorSurf(self):
+        textThing = self.FONT.render('{:.2f}'.format(self.aimAngle), (0, 0, 0), None)
+        textSurf = textThing[0]
 
-        self.surf.fill(self.color)
-        pygame.draw.rect(self.surf, (0,0,0), self.surf.get_rect(), 1)
-        self.FONT.render_to(self.surf, (2, 3), self.name, (0, 0, 0))
+        textSurf = pygame.transform.rotate(textSurf, self.angle * 360 / 6.283)
+        textRect = textSurf.get_rect()
 
-    def getName(self):
+        self.surf.blit(textSurf, (self.radius - textRect.w / 2, self.radius - textRect.h / 2))
+        posi = (self.rect.centerx + 1000 * self.velX, self.rect.centery + 1000 * self.velY)
+        pygame.draw.line(self.surf, (0, 0, 255), (self.rect.centerx, self.rect.centery), posi, 3)
+        # pygame.draw.rect(self.surf, (255, 255, 255), ((self.radius - textRect.w / 2, self.radius - textRect.h / 2), textSurf.get_size()),2)
 
-        self.name = "20151 KLIMAOPREMA, PK-VS 0316-VIS 2"   
 
-    def randomGen(self):
+    def update(self, aim, tick):
 
-        self.daysLeft = random.randint(1, 14)
-        for i in range(0, self.daysLeft):
-            self.days.append(False)
+        
+        self.imgAngle = (self.imgAngle - 3) % 360
 
-        # self.x = random.randint(0, bg.cols - 1) * bg.cellWidth + bg.left
-        # self.y = random.randint(0, bg.rows - 1) * bg.cellHeight + bg.top + bg.cellHeight / 5
+        self.move(aim, tick)
+        self.drawSurf()
 
-        self.totWidth = self.daysLeft * self.width
 
-    def doActivity(self, damage):
+    def move(self, aim, tick):
+        
+        dX = aim[0] - self.rect.centerx
+        dY = aim[1] - self.rect.centery
+        if dY == 0:
+            dY = 0.001
 
-        if not self.completed:
+        # self.aimAngle = math.atan(dX / dY)
+        self.aimAngle = math.atan2(dX, dY)
+        self.aimAngle %= (2 * math.pi)
 
-            self.HP -= damage
-            if self.HP <= 0:
-                self.completed = True
+        delta = (self.aimAngle * 57 - self.angle * 57 + 540) % 360 - 180
 
-            self.color = (  self.R * self.HP / self.maxHP,
-                            self.G * self.HP / self.maxHP + 255 * (1 - self.HP / self.maxHP),
-                            self.B * self.HP / self.maxHP   )
-
-            self.recolorSurf()
-
-            return True
-
+        if delta > 0:
+            self.angleVel = abs(self.angleVel)
         else:
+            self.angleVel = - abs(self.angleVel)
 
-            return False
+        self.dist = math.sqrt(dX ** 2 + dY ** 2)
+        if (self.velX * dX >= 0) and (self.velY * dY >= 0):
+            self.acc = self.absAcc
+        else:
+            self.acc = -self.absAcc
 
-    def update(self, frame):
+        self.vel = max(min(self.vel + self.acc, self.maxVel), 0)
+        self.angle = (self.angle + self.angleVel) % (2 * math.pi)
 
-        removeThis = 0 
+        self.velX = self.vel * math.sin(self.angle)
+        self.velY = self.vel * math.cos(self.angle)
 
-        if frame == 0:
-            self.rect.move_ip(-self.width, 0)
-            self.daysPassed += 1
-            if self.daysPassed == self.daysLeft:
-                removeThis = 1
+        self.rect.move_ip(self.velX * tick, self.velY * tick)
 
-        if self.rect.left < self.limitLeft - self.totWidth:
-            removeThis = 2
+        if self.rect.left < self.limitLeft:
+            self.rect.left = self.limitLeft
+            self.velX = 0
+        if self.rect.right > self.limitRight:
+            self.rect.right = self.limitRight 
+            self.velX = 0
+        if self.rect.top < self.limitTop:
+            self.rect.top = self.limitTop
+            self.velY = 0
+        if self.rect.bottom > self.limitBottom:
+            self.rect.bottom = self.limitBottom
+            self.velY = 0
 
-        return removeThis
+

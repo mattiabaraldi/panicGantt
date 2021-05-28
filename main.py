@@ -37,6 +37,8 @@ stopTime = False
 selectedTurret = 0
 GANTT = []
 
+pos = (0, 0)
+
 alphaTurret = None
 bluTurret = pygame.image.load("sprites\\blu_turret.png").convert_alpha()
 redTurret = pygame.image.load("sprites\\red_turret.png").convert_alpha()
@@ -85,6 +87,7 @@ while running:
                 else:
                     selectedTurret = 3
 
+
         # Check for QUIT event. If QUIT, then set running to false.
         elif event.type == QUIT:
             running = False
@@ -92,7 +95,8 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[2]:
                 if selectedTurret != 0:
-                    player.placeTurret(bg, mousePos[0], mousePos[1], selectedTurret - 1)
+                    player.placeTurret(bg, mousePos
+                    [0], mousePos[1], selectedTurret - 1)
                 else:
                     turretToRemove = []
                     for turret in player.turretList:
@@ -108,12 +112,13 @@ while running:
     player.update(pressed_keys, dt, enemies, bg)
     bg.update(g.currentFrame)
     ui.update(player, selectedTurret)
-    enemies.updateAll(g.currentFrame, player)
+    enemies.updateAll(g.currentFrame, player, pos, dt)
     enemies.spawnAll(bg, player.score)
 
     if pygame.mouse.get_pressed()[0]:
         projAim = pygame.mouse.get_pos()
         player.shoot(projAim)
+        pos = pygame.mouse.get_pos()
 
 
     # DRAW
@@ -123,6 +128,9 @@ while running:
 
     for activity in enemies.GANTT:
         screen.blit(activity.surf, activity.rect)
+
+    for accollo in enemies.accolloList:
+        screen.blit(accollo.surf, accollo.rect)
 
     screen.blit(ui.surf, (0,0))
 
