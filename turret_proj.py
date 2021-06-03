@@ -32,7 +32,8 @@ class TurretProj(pygame.sprite.Sprite):
 
         self.velX = 0
         self.velY = -0.1
-        self.damage = 5
+        self.actDamage = 5
+        self.accDamage = 1
 
         self.limitLeft = bg.left
         self.limitRight = bg.right
@@ -48,12 +49,12 @@ class TurretProj(pygame.sprite.Sprite):
 
         collidedActivity = pygame.sprite.spritecollideany(self, enemies.groupGANTT)
         if collidedActivity != None:
-            if collidedActivity.doActivity(self.damage, self.type):
+            if collidedActivity.doActivity(self.actDamage, self.type):
                 removeThis = True
 
         collidedAccollo = pygame.sprite.spritecollideany(self, enemies.groupAccolli)
         if collidedAccollo != None:
-            if collidedAccollo.doActivity(self.damage, 0):
+            if collidedAccollo.doActivity(self.accDamage):
                 removeThis = True
 
         if self.rect.left < self.limitLeft:

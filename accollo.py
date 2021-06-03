@@ -45,14 +45,14 @@ class Accollo(pygame.sprite.Sprite):
 
         self.aimAngle = 0
         self.acc = 0
-        self.absAcc = 0.005
+        self.absAcc = 0.001
         self.vel = 0
         self.velX = 0
         self.velY = 0
-        self.maxVel = 0.6
-        self.minVel = 0.3
+        self.maxVel = 0.5
+        self.minVel = 0.2
         self.angleAcc = 0
-        self.angleVel = 0.05
+        self.angleVel = 0.03
         self.angle = 0
         self.x = random.randint(self.limitRight, 2 * self.limitRight)
         self.y = random.randint(self.limitTop, self.limitBottom)
@@ -122,6 +122,9 @@ class Accollo(pygame.sprite.Sprite):
             self.turretN = len(player.turretList)
             self.changeTarget = True
 
+        if random.random() > 0.9999:
+            self.changeTarget = True
+
         if self.changeTarget:
             self.changeTarget = False
             if len(player.turretList) != 0:
@@ -186,12 +189,11 @@ class Accollo(pygame.sprite.Sprite):
     def doActivity(self, damage, *args):
 
         if len(args) != 0:
-            if args[0] == 0:
-                self.HP -= damage / 10
-                self.damaged += damage / 10
-            else:
-                self.HP -= damage
-                self.damaged += damage
+            self.HP -= args[0]
+            self.damaged += args[0]
+        else:
+            self.HP -= damage
+            self.damaged += damage
         
         if self.HP <= 0:
             self.HP = 0

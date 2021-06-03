@@ -28,7 +28,8 @@ class Projectile(pygame.sprite.Sprite):
 
         self.type = 0
         self.speed = 0.5
-        self.damage = 1
+        self.actDamage = 1
+        self.accDamage = 2
 
         self.limitLeft = bg.left
         self.limitRight = bg.right
@@ -44,12 +45,12 @@ class Projectile(pygame.sprite.Sprite):
 
         collidedActivity = pygame.sprite.spritecollideany(self, enemies.groupGANTT)
         if collidedActivity != None:
-            if collidedActivity.doActivity(self.damage):
+            if collidedActivity.doActivity(self.actDamage):
                 removeThis = True
 
         collidedAccollo = pygame.sprite.spritecollideany(self, enemies.groupAccolli)
         if collidedAccollo != None:
-            if collidedAccollo.doActivity(self.damage, 1):
+            if collidedAccollo.doActivity(self.accDamage):
                 removeThis = True
 
         if self.rect.left < self.limitLeft:

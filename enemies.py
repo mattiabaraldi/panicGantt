@@ -20,7 +20,7 @@ class Enemies(pygame.sprite.Sprite):
             pass
 
         self.activityRarity = 0.998
-        self.accolloRarity = 0.998
+        self.accolloRarity = 0.993
         
         self.accolloList = []
         self.GANTT = []
