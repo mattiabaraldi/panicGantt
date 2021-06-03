@@ -67,6 +67,8 @@ class UI(pygame.sprite.Sprite):
         uiPos += 20
         self.FONT.render_to(self.surfNames, (10, uiPos), f'Punti: {int(player.score)}', (0, 0, 0))
         uiPos += 20
+        self.FONT.render_to(self.surfNames, (10, uiPos), f'Soldi: {int(player.cash)}', (0, 0, 0))
+        uiPos += 20
         self.FONT.render_to(self.surfNames, (10, uiPos), f'Cazzi: {int(player.cazziatoni)}', (0, 0, 0))
 
         bluAlpha = 127

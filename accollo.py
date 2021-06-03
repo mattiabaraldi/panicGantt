@@ -10,7 +10,10 @@ class Accollo(pygame.sprite.Sprite):
 
         super(Accollo, self).__init__()
 
-        self.radius = 40
+        textSize = 12
+        self.statingRadius = random.randint(25, 40)
+        self.radius = self.statingRadius
+        self.FONT = pygame.freetype.SysFont("Lucon.ttf", textSize)
 
         self.limitLeft = bg.left
         self.limitRight = bg.right - 2 * self.radius
@@ -30,12 +33,15 @@ class Accollo(pygame.sprite.Sprite):
         self.wobble = 0.005
         self.noise = PerlinNoise(octaves=10, seed=1)
 
-        self.maxHP = 100
-        textSize = 100 / 6
-        self.FONT = pygame.freetype.SysFont("Lucon.ttf", textSize)
+        self.maxHP = self.statingRadius * 3
         self.HP = self.maxHP
+        self.turretN = 0
 
         self.dist = 0
+        self.changeTarget = True
+        self.damaged = 0
+        self.dyingTime = 240
+        self.dyingCycle = 0
 
         self.aimAngle = 0
         self.acc = 0
@@ -43,12 +49,12 @@ class Accollo(pygame.sprite.Sprite):
         self.vel = 0
         self.velX = 0
         self.velY = 0
-        self.maxVel = 1
-        self.minVel = 0.1
+        self.maxVel = 0.6
+        self.minVel = 0.3
         self.angleAcc = 0
         self.angleVel = 0.05
         self.angle = 0
-        self.x = random.randint(self.limitLeft, self.limitRight)
+        self.x = random.randint(self.limitRight, 2 * self.limitRight)
         self.y = random.randint(self.limitTop, self.limitBottom)
 
         self.surf = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32).convert_alpha()
@@ -61,29 +67,86 @@ class Accollo(pygame.sprite.Sprite):
         self.rect.move_ip(self.x, self.y)
 
 
-    def drawSurf(self):
+    def drawDeath(self):
 
-        self.surf.blit(self.basicSurf, (0,0))
+        self.surf.fill((0,0,0,0))
+        self.basicSurf.fill((0,0,0,0))
 
-        textThing = self.FONT.render('{:.2f}'.format(self.aimAngle), (0, 0, 0), None)
+        newAlpha = 255 * (1 - self.dyingCycle / self.dyingTime)
+        self.surf.set_alpha(newAlpha)
+
+        self.radius = int((1 + self.dyingCycle / self.dyingTime) * self.statingRadius)
+        self.surf = pygame.transform.scale(self.surf, (2 * self.radius, 2 * self.radius))
+        self.basicSurf = pygame.transform.scale(self.surf, (2 * self.radius, 2 * self.radius))
+        self.rect = self.surf.get_rect(center = self.rect.center)
+
+        pygame.draw.circle(self.basicSurf, self.color, (self.radius, self.radius), self.radius)
+        pygame.draw.circle(self.basicSurf, (0, 0, 0), (self.radius, self.radius), self.radius, 2)
+
+        self.surf.blit(self.basicSurf, (0, 0))
+
+        textThing = self.FONT.render(f'{self.text}', (0, 0, 0), None)
         textSurf = textThing[0]
 
         textSurf = pygame.transform.rotate(textSurf, self.angle * 360 / 6.283)
         textRect = textSurf.get_rect()
 
         self.surf.blit(textSurf, (self.radius - textRect.w / 2, self.radius - textRect.h / 2))
-        posi = (self.rect.w / 2 + self.radius * self.velX, self.rect.h / 2 + self.radius * self.velY)
-        pygame.draw.line(self.surf, (0, 0, 255), (self.rect.w / 2, self.rect.h / 2), posi, 6)
+
+
+    def drawSurf(self):
+
+        self.surf.blit(self.basicSurf, (0,0))
+
+        textThing = self.FONT.render(f'{self.text}', (0, 0, 0), None)
+        textSurf = textThing[0]
+
+        textSurf = pygame.transform.rotate(textSurf, self.angle * 360 / 6.283)
+        textRect = textSurf.get_rect()
+
+        self.surf.blit(textSurf, (self.radius - textRect.w / 2, self.radius - textRect.h / 2))
+
+        # posi = (self.rect.w / 2 + self.radius * self.velX, self.rect.h / 2 + self.radius * self.velY)
+        # pygame.draw.line(self.surf, (0, 0, 255), (self.rect.w / 2, self.rect.h / 2), posi, 6)
         # pygame.draw.rect(self.surf, (255, 255, 255), ((self.radius - textRect.w / 2, self.radius - textRect.h / 2), textSurf.get_size()),2)
 
 
-    def update(self, aim, tick):
+    def update(self, tick, player):
 
+        if self.damaged != 0:
+            if random.random() < (self.damaged / self.maxHP):
+                self.damaged = 0
+                self.changeTarget = True
+
+        if self.turretN != len(player.turretList):
+            self.turretN = len(player.turretList)
+            self.changeTarget = True
+
+        if self.changeTarget:
+            self.changeTarget = False
+            if len(player.turretList) != 0:
+                self.targetTurret = random.choice(player.turretList)
+                self.aim = (self.targetTurret.x, random.randint(self.limitTop, self.limitBottom))
+            else:
+                self.aim = (random.randint(self.limitLeft, self.limitRight), random.randint(self.limitTop, self.limitBottom))
         
         self.imgAngle = (self.imgAngle - 3) % 360
 
-        self.move(aim, tick)
-        self.drawSurf()
+        if self.HP != 0:
+
+            self.move(self.aim, tick)
+            self.drawSurf()
+            return 1
+
+        else:
+            
+            if self.dyingCycle < self.dyingTime:
+                self.move(self.aim, tick)
+                self.drawDeath()
+                self.dyingCycle += 1
+                return 2
+            else:
+                return 0
 
 
     def move(self, aim, tick):
@@ -119,17 +182,27 @@ class Accollo(pygame.sprite.Sprite):
 
         self.rect.move_ip(self.velX * tick, self.velY * tick)
 
-        # if self.rect.left < self.limitLeft:
-        #     self.rect.left = self.limitLeft
-        #     self.velX = 0
-        # if self.rect.right > self.limitRight:
-        #     self.rect.right = self.limitRight 
-        #     self.velX = 0
-        # if self.rect.top < self.limitTop:
-        #     self.rect.top = self.limitTop
-        #     self.velY = 0
-        # if self.rect.bottom > self.limitBottom:
-        #     self.rect.bottom = self.limitBottom
-        #     self.velY = 0
 
+    def doActivity(self, damage, *args):
+
+        if len(args) != 0:
+            if args[0] == 0:
+                self.HP -= damage / 10
+                self.damaged += damage / 10
+            else:
+                self.HP -= damage
+                self.damaged += damage
+        
+        if self.HP <= 0:
+            self.HP = 0
+            self.completed = True
+
+        self.color = (  255 * self.HP / self.maxHP,
+                        255 * (1 - self.HP / self.maxHP),
+                        0   )
+
+        pygame.draw.circle(self.basicSurf, self.color, (self.radius, self.radius), self.radius)
+        pygame.draw.circle(self.basicSurf, (0, 0, 0), (self.radius, self.radius), self.radius, 2)
+
+        return 1                    # destroy projectile after damage
 
