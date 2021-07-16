@@ -161,5 +161,6 @@ while running:
 
     screen.blit(player.surf, player.rect)
 
+
     # Update the display
     pygame.display.flip()

@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import os
 from activity import Activity
 from accollo import Accollo
 
@@ -13,9 +14,9 @@ class Enemies(pygame.sprite.Sprite):
         # load comm file
         self.comms = ["20151 KLIMAOPREMA, PK-VS 0316-VIS 2"]
         try:
-            with open("comm.txt", "r") as f:
+            with open(os.getcwd() + "\comm.txt", "r") as f:
                 for line in f.readlines():
-                    self.comms.append(line.removesuffix("\n"))
+                    self.comms.append(line.replace("\n", ""))
         except:
             pass
 
