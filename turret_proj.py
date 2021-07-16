@@ -70,14 +70,13 @@ class TurretProj(pygame.sprite.Sprite):
         self.rect.move_ip(self.velX * tick, self.velY * tick)
 
         removeThis = False
-
-        # collidedActivity = pygame.sprite.spritecollideany(self, enemies.groupGANTT, self.callbackCollide)
-        collidedActivity = None
-        for enemy in enemies.groupGANTT:
-            if callbackCollideGPU(self.rect.x, self.rect.y, enemy.rect.top, enemy.rect.bottom, enemy.rect.left, enemy.rect.right):
-                collidedActivity = enemy
-                break
-
+        
+        # collidedActivity = None
+        # for enemy in enemies.groupGANTT:
+        #     if callbackCollideGPU(self.rect.x, self.rect.y, enemy.rect.top, enemy.rect.bottom, enemy.rect.left, enemy.rect.right):
+        #         collidedActivity = enemy
+        #         break
+        collidedActivity = pygame.sprite.spritecollideany(self, enemies.groupGANTT, self.callbackCollide)
         if collidedActivity != None:
             collisionResult = collidedActivity.doActivity(self.actDamage, self.type)
             if collisionResult == 1:
