@@ -31,7 +31,7 @@ class Player(pygame.sprite.Sprite):
         self.frictionX = 0.9
         self.frictionY = 0.95
 
-        debugMode = 1
+        debugMode = 0
         if debugMode == 1:
             self.score = 1000000
             self.cash = 1000000
