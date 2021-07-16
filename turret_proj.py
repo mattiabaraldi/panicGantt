@@ -3,6 +3,18 @@ import random
 import string
 import globalvar as g
 from pygame.locals import K_SPACE
+from numba import vectorize, jit
+
+@jit
+def callbackCollideGPU(selfX, selfY, enemyTop, enemyBottom, enemyLeft, enemyRight):
+
+        # return self.rect.collidepoint((enemy.rect.x, enemy.rect.y))
+        if enemyTop < selfY < enemyBottom:
+            if enemyLeft < selfX < enemyRight:
+                return True
+            # return enemy.rect.collidepoint((self.rect.x, self.rect.y))
+        else:
+            return False
 
 class TurretProj(pygame.sprite.Sprite):
 
@@ -40,6 +52,18 @@ class TurretProj(pygame.sprite.Sprite):
         self.limitTop = bg.top
         self.limitBottom = bg.bottom
 
+
+    def callbackCollide(self, enemy2, enemy):
+
+        # return self.rect.collidepoint((enemy.rect.x, enemy.rect.y))
+        if enemy.rect.top < self.rect.y < enemy.rect.bottom:
+            if enemy.rect.left < self.rect.x < enemy.rect.right:
+                return enemy
+            # return enemy.rect.collidepoint((self.rect.x, self.rect.y))
+        else:
+            return False
+    
+
     def update(self, tick, enemies):
 
         # Actual movement
@@ -47,12 +71,21 @@ class TurretProj(pygame.sprite.Sprite):
 
         removeThis = False
 
-        collidedActivity = pygame.sprite.spritecollideany(self, enemies.groupGANTT)
-        if collidedActivity != None:
-            if collidedActivity.doActivity(self.actDamage, self.type):
-                removeThis = True
+        # collidedActivity = pygame.sprite.spritecollideany(self, enemies.groupGANTT, self.callbackCollide)
+        collidedActivity = None
+        for enemy in enemies.groupGANTT:
+            if callbackCollideGPU(self.rect.x, self.rect.y, enemy.rect.top, enemy.rect.bottom, enemy.rect.left, enemy.rect.right):
+                collidedActivity = enemy
+                break
 
-        collidedAccollo = pygame.sprite.spritecollideany(self, enemies.groupAccolli)
+        if collidedActivity != None:
+            collisionResult = collidedActivity.doActivity(self.actDamage, self.type)
+            if collisionResult == 1:
+                removeThis = True
+            elif collisionResult == 2:
+                collidedActivity.kill()
+
+        collidedAccollo = pygame.sprite.spritecollideany(self, enemies.groupAccolli, self.callbackCollide)
         if collidedAccollo != None:
             if collidedAccollo.doActivity(self.accDamage):
                 removeThis = True

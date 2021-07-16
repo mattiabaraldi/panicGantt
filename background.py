@@ -29,10 +29,20 @@ class Background(pygame.sprite.Sprite):
         self.bottom = g.SCREEN_HEIGHT - g.BOTTOM_UI_HEIGHT
         self.surf = pygame.Surface((self.width, self.height))
 
+        self.basicSurf = pygame.Surface((self.width, self.height))
+        for i in range(0, self.rows):
+            for j in range(0, self.cols):
+                color = (255, 255, 255)
+                if (j % 7 == 5) or (j % 7 == 6):
+                    color = (200, 200, 200)
+                pygame.draw.rect(self.basicSurf, color, (j * self.cellWidth, i * self.cellHeight, self.cellWidth - 1, self.cellHeight - 1))
+
         self.surf.fill((0, 0, 0))
         self.rect = self.surf.get_rect()
         self.colOffset = 0
         self.steps = 0
+
+        self.surf.blit(self.basicSurf, (0, 0))
 
 
     def update(self, frame):
@@ -43,9 +53,5 @@ class Background(pygame.sprite.Sprite):
             self.steps += 1
             self.steps = self.steps % self.cols
 
-        for i in range(0, self.rows):
-            for j in range(0, self.cols):
-                color = (255, 255, 255)
-                if (j % 7 == 5) or (j % 7 == 6):
-                    color = (200, 200, 200)
-                pygame.draw.rect(self.surf, color, (j * self.cellWidth, i * self.cellHeight, self.cellWidth - 1, self.cellHeight - 1))
+        # self.surf.blit(self.basicSurf, (0, 0))
+        

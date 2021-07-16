@@ -100,6 +100,7 @@ class Activity(pygame.sprite.Sprite):
             if self.HP <= 0:
                 self.HP = 0
                 self.completed = True
+                return 2
 
             self.color = (  self.R * self.HP / self.maxHP,
                             self.G * self.HP / self.maxHP + 255 * (1 - self.HP / self.maxHP),

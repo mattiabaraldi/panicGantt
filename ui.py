@@ -50,7 +50,7 @@ class UI(pygame.sprite.Sprite):
         self.surf.blit(self.surfBottom, (g.LEFT_UI_WIDTH, g.SCREEN_HEIGHT - g.BOTTOM_UI_HEIGHT))
         self.surf.blit(self.surfRight, (g.SCREEN_WIDTH - g.RIGHT_UI_WIDTH, g.TOP_UI_HEIGHT))
 
-    def update(self, player, selectedTurret):
+    def update(self, player, selectedTurret, tick):
 
         # self.surfNames.blit(self.trasferelloNames, (0,0))
         self.surfNames.fill((0,0,0))
@@ -70,6 +70,9 @@ class UI(pygame.sprite.Sprite):
         self.FONT.render_to(self.surfNames, (10, uiPos), f'Soldi: {int(player.cash)}', (0, 0, 0))
         uiPos += 20
         self.FONT.render_to(self.surfNames, (10, uiPos), f'Cazzi: {int(player.cazziatoni)}', (0, 0, 0))
+        uiPos += 20
+        delay = (1000 / g.FPS) - tick
+        self.FONT.render_to(self.surfNames, (10, uiPos), f'Lag: {int(delay)}', (0, 0, 0))
 
         bluAlpha = 127
         redAlpha = 127

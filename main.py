@@ -111,7 +111,7 @@ while running:
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys, dt, enemies, bg)
     bg.update(g.currentFrame)
-    ui.update(player, selectedTurret)
+    ui.update(player, selectedTurret, dt)
     enemies.updateAll(g.currentFrame, player, dt)
     enemies.spawnAll(bg, player.score)
 

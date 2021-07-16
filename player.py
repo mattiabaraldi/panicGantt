@@ -35,9 +35,11 @@ class Player(pygame.sprite.Sprite):
         if debugMode == 1:
             self.score = 1000000
             self.cash = 1000000
+            self.HP = 1000
         else:
             self.score = 0
             self.cash = 300
+            self.HP = 100
         self.cazziatoni = 0
 
         self.flipped = False
